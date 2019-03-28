@@ -1,0 +1,20 @@
+# Visual Studio codes
+/.vscode/
+
+# Pycaches
+*.pyc
+
+# Database
+*.db
+
+# static images under sub-folder of users
+/app/static/images/*/
+
+# migration files
+/migrations/
+
+# environment file
+.env
+
+# trained_models folders
+/app/tf_disease_classifier/trained_models/*/

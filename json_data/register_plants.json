@@ -1,0 +1,22 @@
+{
+	"plants": [
+		{
+			"name":	"corn"
+		},
+		{
+			"name":	"tomato"
+		},
+		{
+			"name":	"grape"
+		},
+		{
+			"name": "potato"
+		},
+		{
+			"name": "apple"
+		},
+		{
+			"name": "strawberry"
+		}
+	]
+}
