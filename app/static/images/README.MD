@@ -1,0 +1,1 @@
+# To store images uploaded by users under their sub-folders
