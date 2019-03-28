@@ -14,7 +14,7 @@
 /migrations/
 
 # environment file
-.env
+# .env
 
 # trained_models folders
 /app/tf_disease_classifier/trained_models/*/
