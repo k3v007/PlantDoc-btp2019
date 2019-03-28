@@ -4,7 +4,6 @@ from marshmallow import ValidationError
 
 from app import api_bp, create_app, jwt
 from app.blacklist import blacklist
-from app.models import db
 from app.config import DevelopmentConfig
 from app.utils import IMAGE_SET
 
@@ -13,11 +12,6 @@ app.register_blueprint(api_bp, url_prefix="/api")
 
 patch_request_class(app, size=10 * 1024 * 1024)  # max upload of 20MB image
 configure_uploads(app, IMAGE_SET)
-
-
-@app.before_first_request
-def create_db():
-    db.create_all()
 
 
 @app.errorhandler(ValidationError)
