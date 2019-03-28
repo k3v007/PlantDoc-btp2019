@@ -1,16 +1,14 @@
 import os
-import cv2
 import pickle
-import imutils
-import logging
-import argparse
+
+import cv2
 import numpy as np
 import tensorflow as tf
-from flask import url_for
-from app.utils import APP_DIR_PATH
-from keras.models import load_model
 from keras import backend as kb
+from keras.models import load_model
 from keras.preprocessing.image import img_to_array
+
+from app.utils import APP_DIR_PATH
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -21,7 +19,7 @@ def classify_disease(image_path: str, plant_name: str):
     ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
     file_name = os.path.join(APP_DIR_PATH, "static", "images", image_path)
     image = cv2.imread(file_name)
-    output = image.copy()
+    # output = image.copy()
 
     # pre-process the image for classification
     image = cv2.resize(image, (96, 96))
@@ -34,10 +32,10 @@ def classify_disease(image_path: str, plant_name: str):
     # load the corresponding plant model
     mdl = plant_name + ".model"
     model = load_model(os.path.join(
-        ROOT_PATH, "trained models", plant_name, mdl))
+        ROOT_PATH, "trained_models", plant_name, mdl))
     pkl = plant_name + ".pickle"
     lb = pickle.loads(
-        open(os.path.join(ROOT_PATH, "trained models", plant_name, pkl), "rb").read())
+        open(os.path.join(ROOT_PATH, "trained_models", plant_name, pkl), "rb").read())
 
     # classify the input image
     print("[INFO] classifying image...")
