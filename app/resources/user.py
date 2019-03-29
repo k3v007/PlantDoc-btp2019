@@ -1,20 +1,17 @@
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-    jwt_required,
-    get_raw_jwt,
-    jwt_refresh_token_required,
-    fresh_jwt_required,
-    get_jwt_identity,
-)
-from flask_restful import Resource
-from app.models.user import UserModel
-from flask import request, jsonify
-from app.schemas.user import UserSchema
-from app.blacklist import blacklist
-from app.utils import admin_required
 import traceback
+
+from flask import request
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                fresh_jwt_required, get_jwt_identity,
+                                get_raw_jwt, jwt_refresh_token_required,
+                                jwt_required)
+from flask_restful import Resource
+from werkzeug.security import generate_password_hash
+
+from app.blacklist import blacklist
+from app.models.user import UserModel
+from app.schemas.user import UserSchema
+from app.utils import admin_required
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
@@ -26,7 +23,7 @@ class UserRegister(Resource):
     def post(cls):
         user_json = request.get_json()
         user = user_schema.load(user_json)
-        if UserModel.find_by_username(user.username) or UserModel.find_by_email(user.email):
+        if UserModel.find_by_email(user.email):
             return {"message": "User already exists"}, 400
         print(user)
 
@@ -44,12 +41,13 @@ class UserLogin(Resource):
     @classmethod
     def post(cls):
         user_json = request.get_json()
-        user_data = user_schema.load(user_json, partial=("email",))
-        user = UserModel.find_by_username(user_data.username)
+        user_data = user_schema.load(user_json, partial=("name",))
+        user = UserModel.find_by_email(user_data.email)
         if user and user.check_password(user_data.password):
             access_token = create_access_token(identity=user.id, fresh=True)
             refresh_token = create_refresh_token(identity=user.id)
-            return {"access_token": access_token, "refresh_token": refresh_token}, 200
+            return {"access_token": access_token, 
+                    "refresh_token": refresh_token}, 200
 
         return {"message": "Invalid Credentials."}, 401
 
