@@ -1,8 +1,12 @@
-from flask import g, url_for, request
+from secrets import token_hex
+
+from flask import g, request, url_for
+from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_restful import Resource
-from app.oauth_app import google
+from werkzeug.security import generate_password_hash
 
 from app.models.user import UserModel
+from app.oauth_app import google
 
 
 class GoogleLogin(Resource):
@@ -25,6 +29,17 @@ class GoogleAuthorize(Resource):
 
         g.access_token = resp['access_token']
         google_data = google.get('userinfo')
-        # print(vars(google_data))
+        print(vars(google_data))
 
-        return {"data": google_data.data}, 200
+        user = UserModel.find_by_email(google_data.data['email'])
+        if user is None:
+            name = google_data.data['name'],
+            email = google_data.data['email'],
+            password = generate_password_hash(token_hex(16))
+            user = UserModel(name=name, email=email, password=password)
+            user.save_to_db()
+
+        access_token = create_access_token(identity=user.id, fresh=True)
+        refresh_token = create_refresh_token(identity=user.id)
+
+        return {"access_token": access_token, "refresh_token": refresh_token}, 200      # noqa
