@@ -30,12 +30,10 @@
 ```
 
 ## Usage
-1. Copy "trained_model" folders to the path "/app/tf_disease_classifier/"
-2. Change the configuration in [run.py](/run.py#L10) according to class from [config.py](/app/config.py)
-3. Set your environment variables
-    * use *Config* class to use sqlite
-    * to use *DevelopmentConfig*, rename .env.example to .env and set the values as directed in the file
-4. Run the following commands to set migrations:
+1. Copy "[trained_models](https://drive.google.com/drive/folders/1z6Yt_0P1D9rSjN-pKfF4qmjAOv_nWTh6?usp=sharing)" folders to the path "/app/tf_disease_classifier/"
+2. Set app settings and environment variables
+    - rename .env.example to .env and set the values as directed in the file
+3. Run the following commands to set migrations:
 ```python
     python manage.py db init
     python manage.py db migrate -m "Inital commit"
@@ -49,8 +47,8 @@
 ## Postman environment setup
 1. Load '*btp-2019.postman_collection.json*' into **Postman**
 2. Create an enviroment and set {key:value} as:
-    - key = url
-    - value = http://localhost:5000/api
+    - key = **url**
+    - value = **http://localhost:5000**
 3. Now test the different apis:
     - first register admin and user
-    - user admin to register plants and diseases
+    - use admin to register plants and diseases
