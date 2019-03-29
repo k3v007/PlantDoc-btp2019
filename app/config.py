@@ -1,15 +1,12 @@
 import os
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 class Config(object):
     # Flask App
     CSRF_ENABLED = True
     DEBUG = False
     PROPAGATE_EXCEPTIONS = True
+    SECRET_KEY = os.getenv('SECRET_KEY')
     TESTING = False
     THREADED = True
     # JWT
