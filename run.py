@@ -4,10 +4,9 @@ from marshmallow import ValidationError
 
 from app import api_bp, create_app, jwt
 from app.blacklist import blacklist
-from app.config import DevelopmentConfig
 from app.utils import IMAGE_SET
 
-app = create_app(DevelopmentConfig)
+app = create_app()
 app.register_blueprint(api_bp)
 
 patch_request_class(app, size=10 * 1024 * 1024)  # max upload of 20MB image

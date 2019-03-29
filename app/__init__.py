@@ -6,7 +6,8 @@ from flask_restful import Api
 from dotenv import load_dotenv
 load_dotenv('.env')
 
-from app.config import Config   # noqa
+import os   # noqa
+
 from app.models import db   # noqa
 from app.resources import oauth     # noqa
 from app.resources.disease import Disease, DiseaseList, RegisterDiseases    # noqa
@@ -14,7 +15,7 @@ from app.resources.google_login import GoogleLogin, GoogleAuthorize     # noqa
 from app.resources.image import ImageList, ImageUpload      # noqa
 from app.resources.plant import Plant, PlantList, RegisterPlants    # noqa
 from app.resources.user import (User, UserLogin, UserRegister, UserList,    # noqa
-                                UserLogout)
+                                UserLogout, TokenRefresh)
 from app.schemas import ma      # noqa
 
 
@@ -23,9 +24,10 @@ api = Api(api_bp)
 jwt = JWTManager()
 
 
-def create_app(config_class=Config):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    # app.config.from_object(config_class)
+    app.config.from_object(os.environ['APP_SETTINGS'])
     db.init_app(app)
     ma.init_app(app)
     jwt.init_app(app)
@@ -36,6 +38,7 @@ def create_app(config_class=Config):
     api.add_resource(User, '/api/user/<int:user_id>')
     api.add_resource(UserList, '/api/users')
     api.add_resource(UserLogout, '/logout')
+    api.add_resource(TokenRefresh, "/refresh")
     api.add_resource(Plant, '/api/plant/<string:name>')
     api.add_resource(PlantList, '/api/plants')
     api.add_resource(RegisterPlants, '/api/register/plants')

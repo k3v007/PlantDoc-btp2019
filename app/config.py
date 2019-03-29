@@ -20,21 +20,16 @@ class Config(object):
     UPLOADED_IMAGES_DEST = os.path.join("app", "static", "images")
 
 
-class ProductionConfig(Config):
+class ProdConfig(Config):
     DEBUG = False
 
 
-class StagingConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
-
-
-class DevelopmentConfig(Config):
+class DevConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 
-class TestingConfig(Config):
+class TestConfig(Config):
     TESTING = True
