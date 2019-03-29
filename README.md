@@ -30,7 +30,7 @@
 ```
 
 ## Usage
-1. Copy "[trained_models](https://drive.google.com/drive/folders/1z6Yt_0P1D9rSjN-pKfF4qmjAOv_nWTh6?usp=sharing)" folders to the path "[/app/tf_disease_classifier/](/app/tf_disease_classifier/)"
+1. Copy "[trained_models](https://drive.google.com/drive/folders/1z6Yt_0P1D9rSjN-pKfF4qmjAOv_nWTh6?usp=sharing)" folders to the path "[/app/tf_disease_classifier/trained_models](/app/tf_disease_classifier/trained_models)"
 2. Set app settings and environment variables
     - rename .env.example to .env and set the values as directed in the file
 3. Run the following commands to set migrations:
