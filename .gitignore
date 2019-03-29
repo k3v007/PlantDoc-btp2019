@@ -15,6 +15,7 @@
 
 # environment file
 .env
+/envs
 
 # trained_models folders
 /app/tf_disease_classifier/trained_models/*/
