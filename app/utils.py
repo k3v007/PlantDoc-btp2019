@@ -1,12 +1,12 @@
 import os
-import re
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
-from app.models.user import UserModel
 from functools import wraps
 from typing import Union
+
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from flask_uploads import IMAGES, UploadSet
 from werkzeug.datastructures import FileStorage
 
-from flask_uploads import UploadSet, IMAGES
+from app.models.user import UserModel
 
 # To suppress Tensorflow warnings
 APP_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +19,7 @@ def admin_required(fn):
         verify_jwt_in_request()
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(_id=user_id)
-        if not user._admin:
+        if not user.admin:
             return {"msg": "Admins only"}, 403
         else:
             return fn(*args, **kwargs)

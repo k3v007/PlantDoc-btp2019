@@ -1,15 +1,12 @@
 import os
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 class Config(object):
     # Flask App
     CSRF_ENABLED = True
     DEBUG = False
     PROPAGATE_EXCEPTIONS = True
+    SECRET_KEY = os.getenv('SECRET_KEY')
     TESTING = False
     THREADED = True
     # JWT
@@ -23,22 +20,16 @@ class Config(object):
     UPLOADED_IMAGES_DEST = os.path.join("app", "static", "images")
 
 
-class ProductionConfig(Config):
+class ProdConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 
-class StagingConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
-
-
-class DevelopmentConfig(Config):
+class DevConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 
-class TestingConfig(Config):
+class TestConfig(Config):
     TESTING = True
