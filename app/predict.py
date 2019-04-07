@@ -14,7 +14,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
-def classify_disease(image_path: str, plant_name: str):
+def predict_disease(image_path: str, plant_name: str):
     # load the image
     ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
     file_name = os.path.join(APP_DIR_PATH, "static", "images", image_path)
@@ -35,10 +35,10 @@ def classify_disease(image_path: str, plant_name: str):
         ROOT_PATH, "trained_models", plant_name, mdl))
     pkl = plant_name + ".pickle"
     lb = pickle.loads(
-        open(os.path.join(ROOT_PATH, "trained_models", plant_name, pkl), "rb").read())
+        open(os.path.join(ROOT_PATH, "trained_models", plant_name, pkl), "rb").read())  # noqa
 
-    # classify the input image
-    print("[INFO] classifying image...")
+    # predict the input image
+    print("[INFO] Predicting disease...")
     pred = model.predict(image)[0]
     idx = np.argmax(pred)
     label = lb.classes_[idx]

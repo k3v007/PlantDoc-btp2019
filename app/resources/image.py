@@ -11,8 +11,8 @@ from app.models.disease import DiseaseModel
 from app.models.image import ImageModel
 from app.models.plant import PlantModel
 from app.models.user import UserModel
+from app.predict import predict_disease
 from app.schemas.image import ImageModelSchema, ImageSchema
-from app.tf_disease_classifier.classify import classify_disease
 from app.utils import admin_required, delete_image, save_image
 
 image_schema = ImageSchema()
@@ -47,7 +47,7 @@ class ImageUpload(Resource):
             return {"message": "Not a valid image"}, 400
 
         try:
-            disease_result = classify_disease(image_path, plant_name)
+            disease_result = predict_disease(image_path, plant_name)
         except:     # noqa
             traceback.print_exc()
             delete_image(image_path)
