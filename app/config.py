@@ -16,8 +16,6 @@ class Config(object):
     # Databse
     SQLALCHEMY_DATABASE_URI = "sqlite:///data.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # Image-Upload
-    UPLOADED_IMAGES_DEST = os.path.join("app", "static", "images")
 
 
 class ProdConfig(Config):
