@@ -1,16 +1,15 @@
 import os
 from functools import wraps
-from typing import Union
 
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
-from flask_uploads import IMAGES, UploadSet
+from PIL import Image
 from werkzeug.datastructures import FileStorage
 
 from app.models.user import UserModel
 
-# To suppress Tensorflow warnings
 APP_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-IMAGE_SET = UploadSet("images", IMAGES)  # set name and allowed extensions
+# set directory path for saving images
+IMAGE_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "images")
 
 
 def admin_required(fn):
@@ -27,21 +26,19 @@ def admin_required(fn):
 
 
 # Helper tools for images
-def save_image(image: FileStorage, folder: str = None, name: str = None) -> str:
-    return IMAGE_SET.save(image, folder, name)
+
+def save_image(image_data: FileStorage, folder):
+    # Resize the image before saving
+    # Image size close to 640x360 or 640x480
+    image = Image.open(image_data)    
+    max_size = 640, 480
+    image.thumbnail(max_size, Image.ANTIALIAS)
+
+    image_path = os.path.join(IMAGE_DIR_PATH, folder, image_data.filename)
+    image.save(image_path)
+
+    return image_path
 
 
-def _retrieve_filename(file: Union[str, FileStorage]) -> str:
-    if isinstance(file, FileStorage):
-        return file.filename
-    return file
-
-
-def get_basename(file: Union[str, FileStorage]) -> str:
-    filename = _retrieve_filename(file)
-    return os.path.split(filename)[1]
-
-
-def get_extension(file: Union[str, FileStorage]) -> str:
-    filename = _retrieve_filename(file)
-    return os.path.splitext(filename)[1]
+def delete_image(image_path: str):
+    os.remove(os.path.join(IMAGE_DIR_PATH, image_path))
