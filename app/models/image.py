@@ -13,13 +13,12 @@ class ImageModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)
     disease_id = db.Column(db.Integer, db.ForeignKey(
-        'diseases.id', ondelete='CASCADE'), nullable=False)
+        'diseases.id', ondelete='CASCADE'))
 
-    def __init__(self, image_path, plant_id, user_id, disease_id):
+    def __init__(self, image_path, plant_id, user_id):
         self.image_path = image_path
         self.plant_id = plant_id
         self.user_id = user_id
-        self.disease_id = disease_id
 
     def __repr__(self):
         return f"Image(id: {self.id}, image_path: {self.image_path}, upload_date: {self.upload_date}, plant_id: {self.plant_id}, user_id: {self.user_id}, disease_id: {self.disease_id})"

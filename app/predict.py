@@ -17,7 +17,9 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 def predict_disease(image_path: str, plant_name: str):
     # load the image
     ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+
     file_name = os.path.join(APP_DIR_PATH, "static", "images", image_path)
+    
     image = cv2.imread(file_name)
     # output = image.copy()
 

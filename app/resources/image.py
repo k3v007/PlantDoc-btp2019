@@ -13,7 +13,8 @@ from app.models.plant import PlantModel
 from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageModelSchema, ImageSchema
-from app.utils import admin_required, delete_image, save_image
+from app.utils import admin_required, delete_image
+from app.aws import upload_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
@@ -42,29 +43,24 @@ class ImageUpload(Resource):
 
         # save image
         try:
-            image_path = save_image(image, folder=user_folder)
+            image_path = upload_image(image, folder=user_folder)
         except:     # noqa
             return {"message": "Not a valid image"}, 400
+        
+        return {"image_path": image_path}, 200
+
+        # try:
+        #     disease_result = predict_disease(image_path, plant_name)
+        # except:     # noqa
+        #     traceback.print_exc()
+        #     delete_image(image_path)
+        #     return {"message": "ML model processing failed"}, 500
 
         try:
-            disease_result = predict_disease(image_path, plant_name)
-        except:     # noqa
-            traceback.print_exc()
-            delete_image(image_path)
-            return {"message": "ML model processing failed"}, 500
-
-        try:
-            print(disease_result)
-            disease = DiseaseModel.find_by_plant(
-                disease_result["disease"], plant.id)
-            # if disease is not registered
-            if disease is None:
-                return {"message": "failed to save image. Disease not found!"}
-
             # saving image into database
             image_data = ImageModel(
                 image_path=image_path, plant_id=plant.id,
-                user_id=user_id, disease_id=disease.id
+                user_id=user_id
             )
             db.session.add(image_data)
             db.session.commit()
@@ -72,7 +68,8 @@ class ImageUpload(Resource):
             traceback.print_exc()
             return {"message": "failed to save image to database"}, 500
 
-        return {"result": disease_result}
+        # return {"result": disease_result}
+        return {"message": "Image uploaded successfully!"}, 200
 
 
 class ImageList(Resource):

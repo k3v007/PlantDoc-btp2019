@@ -2,8 +2,6 @@ import os
 from functools import wraps
 
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
-from PIL import Image
-from werkzeug.datastructures import FileStorage
 
 from app.models.user import UserModel
 
@@ -26,19 +24,6 @@ def admin_required(fn):
 
 
 # Helper tools for images
-
-def save_image(image_data: FileStorage, folder):
-    # Resize the image before saving
-    # Image size close to 640x360 or 640x480
-    image = Image.open(image_data)    
-    max_size = 640, 480
-    image.thumbnail(max_size, Image.ANTIALIAS)
-
-    image_path = os.path.join(IMAGE_DIR_PATH, folder, image_data.filename)
-    image.save(image_path)
-
-    return image_path
-
 
 def delete_image(image_path: str):
     os.remove(os.path.join(IMAGE_DIR_PATH, image_path))
