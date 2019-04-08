@@ -6,9 +6,9 @@ import boto3
 from PIL import Image
 from werkzeug.datastructures import FileStorage
 
-S3_KEY = os.getenv('S3_KEY')
-S3_SECRET = os.getenv('S3_SECRET_ACCESS_KEY')
-S3_BUCKET = os.getenv('S3_BUCKET')
+S3_KEY = os.environ['S3_KEY']
+S3_SECRET = os.environ['S3_SECRET_ACCESS_KEY']
+S3_BUCKET = os.environ['S3_BUCKET']
 
 
 def get_s3_resource():
@@ -35,7 +35,6 @@ def get_s3_client():
         traceback.print_exc()
 
     return s3_client
-
 
 
 def get_bucket(bucket: str = S3_BUCKET):
