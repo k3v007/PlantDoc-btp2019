@@ -51,6 +51,9 @@ def create_app():
     api.add_resource(ImageListOfUser, "/api/user/images")
     api.add_resource(GoogleLogin, "/login/google")
     api.add_resource(GoogleAuthorize, "/login/google/authorized",
-                                      endpoint="google_authorize")                                      
+                                      endpoint="google_authorize")
+
+    from app.view import APP
+    app.register_blueprint(APP)
 
     return app
