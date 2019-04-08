@@ -6,6 +6,7 @@ from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 
+from app.aws import upload_image
 from app.models import db
 from app.models.disease import DiseaseModel
 from app.models.image import ImageModel
@@ -14,7 +15,6 @@ from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageModelSchema, ImageSchema
 from app.utils import admin_required, delete_image
-from app.aws import upload_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
@@ -47,7 +47,7 @@ class ImageUpload(Resource):
         except:     # noqa
             return {"message": "Not a valid image"}, 400
         
-        return {"image_path": image_path}, 200
+        # return {"image_path": image_path}, 200
 
         # try:
         #     disease_result = predict_disease(image_path, plant_name)
@@ -77,3 +77,11 @@ class ImageList(Resource):
     @admin_required
     def get(cls):
         return {"images": img_list_schema.dump(ImageModel.find_all())}, 200
+
+
+class ImageListOfUser(Resource):
+    @classmethod
+    @jwt_required
+    def get(cls):
+        user_id = get_jwt_identity()
+        return {"images": img_list_schema.dump(ImageModel.find_by_user(user_id))}, 200

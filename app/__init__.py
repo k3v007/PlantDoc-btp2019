@@ -1,22 +1,23 @@
-from flask import Blueprint, Flask
-from flask_jwt_extended import JWTManager
-from flask_restful import Api
+import os  # noqa
 
 # environment needs to be loaded first
 from dotenv import load_dotenv
 load_dotenv('.env')
 
-import os   # noqa
+from flask import Blueprint, Flask
+from flask_jwt_extended import JWTManager
+from flask_restful import Api
 
-from app.models import db   # noqa
-from app.resources import oauth     # noqa
-from app.resources.disease import Disease, DiseaseList, RegisterDiseases    # noqa
-from app.resources.google_login import GoogleLogin, GoogleAuthorize     # noqa
-from app.resources.image import ImageList, ImageUpload      # noqa
-from app.resources.plant import Plant, PlantList, RegisterPlants    # noqa
-from app.resources.user import (User, UserLogin, UserRegister, UserList,    # noqa
-                                UserLogout, TokenRefresh)
-from app.schemas import ma      # noqa
+from app.models import db  # noqa
+from app.resources import oauth  # noqa
+from app.resources.disease import (Disease, DiseaseList,  # noqa
+                                   RegisterDiseases)
+from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
+from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
+from app.resources.plant import Plant, PlantList, RegisterPlants  # noqa
+from app.resources.user import (TokenRefresh, User, UserList,  # noqa
+                                UserLogin, UserLogout, UserRegister)
+from app.schemas import ma  # noqa
 
 
 api_bp = Blueprint('api', __name__)
@@ -47,8 +48,9 @@ def create_app():
     api.add_resource(RegisterDiseases, '/api/register/diseases')
     api.add_resource(ImageUpload, "/api/upload/image/<string:plant_name>")
     api.add_resource(ImageList, "/api/images")
+    api.add_resource(ImageListOfUser, "/api/user/images")
     api.add_resource(GoogleLogin, "/login/google")
     api.add_resource(GoogleAuthorize, "/login/google/authorized",
-                                      endpoint="google_authorize")
+                                      endpoint="google_authorize")                                      
 
     return app
