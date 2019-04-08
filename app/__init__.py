@@ -53,7 +53,7 @@ def create_app():
     api.add_resource(GoogleAuthorize, "/login/google/authorized",
                                       endpoint="google_authorize")
 
-    from app.view import APP
+    from app.views import APP
     app.register_blueprint(APP)
 
     return app
