@@ -29,7 +29,7 @@ class GoogleAuthorize(Resource):
 
         g.access_token = resp['access_token']
         google_data = google.get('userinfo')
-        print(vars(google_data))
+        # print(vars(google_data))
 
         user = UserModel.find_by_email(google_data.data['email'])
         if user is None:

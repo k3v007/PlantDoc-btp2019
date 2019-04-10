@@ -10,7 +10,7 @@ google = oauth.remote_app(
     consumer_key=os.getenv('GOOGLE_ID'),
     consumer_secret=os.getenv('GOOGLE_SECRET'),
     request_token_params={
-        'scope': 'email'
+        'scope': ['email', 'profile']
     },
     base_url='https://www.googleapis.com/oauth2/v1/',
     request_token_url=None,
