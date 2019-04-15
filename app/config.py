@@ -20,6 +20,8 @@ class Config(object):
 
 class ProdConfig(Config):
     DEBUG = False
+    # Database
+    SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 
 
 class DevConfig(Config):

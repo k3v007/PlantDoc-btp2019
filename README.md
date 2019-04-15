@@ -1,6 +1,6 @@
 # Plant Disease Detection and Diagnosis using Deep Learning
 
-**It's a B.Tech Final Year - 2019 Project** -- [*PlantDoc*](https://plant-doc-btp2019.herokuapp.com//login/google/authorized)
+**It's a B.Tech Final Year - 2019 Project** -- [*PlantDoc*](https://plant-doc-btp2019.herokuapp.com)
 
 ## Installation
 
