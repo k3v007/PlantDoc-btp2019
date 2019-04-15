@@ -33,7 +33,7 @@ idna==2.8
 imagesize==1.1.0
 imutils==0.5.2
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.10.1
 jmespath==0.9.4
 Keras==2.2.4
 Keras-Applications==1.0.7
