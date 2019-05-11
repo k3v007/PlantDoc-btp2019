@@ -9,6 +9,7 @@ from werkzeug.datastructures import FileStorage
 S3_KEY = os.environ['S3_KEY']
 S3_SECRET = os.environ['S3_SECRET_ACCESS_KEY']
 S3_BUCKET = os.environ['S3_BUCKET']
+S3_REGION = os.environ['S3_REGION']
 
 
 def get_s3_resource():
@@ -29,7 +30,8 @@ def get_s3_client():
         s3_client = boto3.client(
             's3',
             aws_access_key_id=S3_KEY,
-            aws_secret_access_key=S3_SECRET
+            aws_secret_access_key=S3_SECRET,
+            region_name=S3_REGION
         )
     except:     # noqa
         traceback.print_exc()
@@ -61,6 +63,7 @@ def upload_image(image_file: FileStorage, folder):
 
 def get_presigned_url(image_path: str):
     s3 = get_s3_client()
+    
     url = s3.generate_presigned_url(
         ClientMethod='get_object',
         Params={
