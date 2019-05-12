@@ -1,4 +1,5 @@
 import os
+import datetime
 
 
 class Config(object):
@@ -13,6 +14,8 @@ class Config(object):
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh", ]
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
+    JWT_REFRESH_TOKEN_EXPIRES = datetime.timedelta(days=90)
     # Databse
     SQLALCHEMY_DATABASE_URI = "sqlite:///data.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
