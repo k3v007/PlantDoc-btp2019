@@ -1,0 +1,24 @@
+{
+	"diseases": [
+		{
+			"name":	"Greening",
+			"plant_name": "citrus"
+		},
+		{
+			"name":	"Canker",
+			"plant_name": "citrus"
+		},
+		{
+			"name":	"Gummosis",
+			"plant_name": "citrus"
+		},
+		{
+			"name": "Leaf Miner",
+			"plant_name": "citrus"
+        },
+        {
+			"name": "Lemon Butterfly",
+			"plant_name": "citrus"
+		}
+	]
+}
