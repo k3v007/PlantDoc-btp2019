@@ -4,14 +4,14 @@ import os  # noqa
 from dotenv import load_dotenv
 load_dotenv('.env')
 
-from flask import Blueprint, Flask
-from flask_jwt_extended import JWTManager
-from flask_restful import Api
+from flask import Blueprint, Flask  # noqa
+from flask_jwt_extended import JWTManager   # noqa
+from flask_restful import Api   # noqa
 
 from app.models import db  # noqa
 from app.resources import oauth  # noqa
-from app.resources.disease import (Disease, DiseaseList,  # noqa
-                                   RegisterDiseases)
+from app.resources.disease import (Disease, DiseaseList, DiseaseListOfPlant,  # noqa
+                                   RegisterDiseases, UpdateDisease)
 from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
 from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
 from app.resources.plant import Plant, PlantList, RegisterPlants  # noqa
@@ -43,9 +43,11 @@ def create_app():
     api.add_resource(Plant, '/api/plant/<string:name>')
     api.add_resource(PlantList, '/api/plants')
     api.add_resource(RegisterPlants, '/api/register/plants')
-    api.add_resource(Disease, '/api/disease/<string:name>/<int:plant_id>')
+    api.add_resource(Disease, '/api/disease/<int:disease_id>')
     api.add_resource(DiseaseList, '/api/diseases')
+    api.add_resource(DiseaseListOfPlant, '/api/diseases/<int:plant_id>')
     api.add_resource(RegisterDiseases, '/api/register/diseases')
+    api.add_resource(UpdateDisease, '/api/update/disease/<int:disease_id>')
     api.add_resource(ImageUpload, "/api/upload/image/<string:plant_name>")
     api.add_resource(ImageList, "/api/images")
     api.add_resource(ImageListOfUser, "/api/user/images")
