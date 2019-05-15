@@ -13,7 +13,6 @@ plant_list_schema = PlantSchema(many=True)
 
 class Plant(Resource):
     @classmethod
-    @admin_required
     def get(cls, name: str):
         plant = PlantModel.find_by_name(name)
         if plant:
