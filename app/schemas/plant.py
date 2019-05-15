@@ -8,5 +8,6 @@ class PlantSchema(ma.ModelSchema):
 
     class Meta:
         model = PlantModel
-        load_only = ("images",)
+        ordered = True
+        load_only = ("images", "diseases")
         include_fk = True
