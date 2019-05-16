@@ -82,7 +82,7 @@ class ImageB64Upload(Resource):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         plant = PlantModel.find_by_name(plant_name)
-        image_string = img_b64_schema.load(json_data)
+        image_string = img_b64_schema.load(json_data)["image_b64"]
 
         user_folder = f"user_{user.user_uuid}"
 
