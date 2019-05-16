@@ -1,8 +1,9 @@
+import logging
 import os
 import traceback
 from secrets import token_hex
 
-from flask import request
+from flask import current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 
@@ -79,6 +80,7 @@ class ImageB64Upload(Resource):
     def post(cls, plant_name: str):
         json_data = request.get_json()
         image = img_b64_schema.load(json_data)
+        current_app.logger.info(f"image_b64: {image['image_b64']}")
 
         return {"message": image["image_b64"]}, 200
 
