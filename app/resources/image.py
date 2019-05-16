@@ -80,7 +80,7 @@ class ImageB64Upload(Resource):
         json_data = request.get_json()
         image = img_b64_schema.load(json_data)
 
-        return {"message": image["image_string"]}, 200
+        return {"message": image["image_b64"]}, 200
 
 
 class ImageList(Resource):

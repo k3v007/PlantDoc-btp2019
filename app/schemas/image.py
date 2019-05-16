@@ -33,4 +33,4 @@ class ImageModelSchema(ma.ModelSchema):
 
 
 class ImageB64Schema(Schema):
-    image_string: fields.String(required=True)
+    image_b64 = fields.String(required=True)
