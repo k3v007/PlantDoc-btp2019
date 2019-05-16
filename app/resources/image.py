@@ -7,7 +7,7 @@ from flask import current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 
-from app.aws import upload_image
+from app.aws import upload_image, upload_b64_image
 from app.models import db
 from app.models.disease import DiseaseModel
 from app.models.image import ImageModel
@@ -48,7 +48,7 @@ class ImageUpload(Resource):
             image_path = upload_image(image, folder=user_folder)
         except:     # noqa
             return {"message": "Not a valid image"}, 400
-        
+
         # return {"image_path": image_path}, 200
 
         # try:
@@ -79,11 +79,33 @@ class ImageB64Upload(Resource):
     @jwt_required
     def post(cls, plant_name: str):
         json_data = request.get_json()
+        user_id = get_jwt_identity()
+        user = UserModel.find_by_id(user_id)
+        plant = PlantModel.find_by_name(plant_name)
         image_string = img_b64_schema.load(json_data)
 
-        current_app.logger.info(f"image_b64: {image['image_b64']}")
+        user_folder = f"user_{user.user_uuid}"
 
-        return {"message": image["image_b64"]}, 200
+        # save image
+        try:
+            image_path = upload_b64_image(image_string, folder=user_folder)
+        except:     # noqa
+            return {"message": "Not a valid base64 string"}, 400
+
+        try:
+            # saving image into database
+            image_data = ImageModel(
+                image_path=image_path, plant_id=plant.id,
+                user_id=user_id
+            )
+            db.session.add(image_data)
+            db.session.commit()
+        except:     # noqa
+            traceback.print_exc()
+            return {"message": "Failed to save image to database"}, 500
+
+        # current_app.logger.info(f"image_b64: {image_string['image_b64']}")
+        return {"message": "Image uploaded Successfully."}, 200
 
 
 class ImageList(Resource):

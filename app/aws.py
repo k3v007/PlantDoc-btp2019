@@ -1,6 +1,8 @@
+import base64
 import os
 import traceback
 from io import BytesIO
+from secrets import token_hex
 
 import boto3
 from PIL import Image
@@ -61,9 +63,20 @@ def upload_image(image_file: FileStorage, folder):
     return image_path
 
 
+def upload_b64_image(image_string: str, folder):
+    img = base64.b64decode(image_string)
+    buf = BytesIO(img)
+
+    my_bucket = get_bucket()
+    image_path = f"images/{folder}/" + token_hex(8) + ".jpg"
+    my_bucket.Object(image_path).put(Body=buf.getvalue())    # noqa
+
+    return image_path
+
+
 def get_presigned_url(image_path: str):
     s3 = get_s3_client()
-    
+
     url = s3.generate_presigned_url(
         ClientMethod='get_object',
         Params={
