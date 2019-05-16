@@ -1,24 +1,22 @@
 # Plant Disease Detection and Diagnosis using Deep Learning
 
-**It's a B.Tech Final Year - 2019 Project**
+**It's a B.Tech Final Year - 2019 Project** -- [*PlantDoc*](https://plant-doc-btp2019.herokuapp.com)
 
 ## Installation
 
-1. Install [postgres](https://www.postgresql.org/download/) and complete it's configuration
+1. Use the package manager [pip](https://pip.pypa.io/en/stable/installing/) for installation and [python3.6 or above](https://www.python.org/downloads/)
 
-2. Use the package manager [pip](https://pip.pypa.io/en/stable/installing/) for installation and [python3.6 or above](https://www.python.org/downloads/)
-
-3. Create a virtual environment (using virtualenv etc.)
+2. Create a virtual environment (using virtualenv etc.)
 ```python
+    # For Windows 10
     pip install virtualenv
+    pip install virtualenvwrapper-win
+    mkvirtualenv env_name   # Create virtual environment
+    setprojectdir .         # assuming git-directory
 
-# We use virtualenvwrapper for easy management of envs
-    pip install virtualenvwrapper # for linux
-    pip install virtualenvwrapper-win # for windows
-
-# Create virtual environment
-    mkvirtualenv env_name
-    setprojectdir .     # assuming you are in git-directory
+    # For linux System - using conda
+    conda create -n env_name python=3.7.2
+    conda activate env_name
 ```
 4. Install the requirements
 ```python
@@ -27,28 +25,19 @@
 5. To deactivate the env simply quit the terminal or enter
 ```python
     deactivate
+    
+    # or
+    conda deactivate    # for linux
 ```
 
 ## Usage
-1. Copy "[trained_models](https://drive.google.com/drive/folders/1z6Yt_0P1D9rSjN-pKfF4qmjAOv_nWTh6?usp=sharing)" folders to the path "[/app/tf_disease_classifier/trained_models](/app/tf_disease_classifier/trained_models)"
-2. Set app settings and environment variables
-    - rename .env.example to .env and set the values as directed in the file
-3. Run the following commands to set migrations:
+
+1. Set your database on heroku, aws or any other platform
+2. Run the following commands to set migrations (already connected to above DB):
 ```python
     python manage.py db init
     python manage.py db migrate -m "Inital commit"
     python manage.py db upgrade
 ```
-4. Finally run the flask app
-```python
-    python run.py
-```
+3. Host the app on Heroku or AWS
 
-## Postman environment setup
-1. Load '*btp-2019.postman_collection.json*' into **Postman**
-2. Create an enviroment and set {key:value} as:
-    - key = **url**
-    - value = **http://localhost:5000**
-3. Now test the different apis:
-    - first register admin and user
-    - use admin to register plants and diseases

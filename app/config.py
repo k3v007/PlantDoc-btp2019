@@ -1,6 +1,7 @@
 import os
 import datetime
 
+
 class Config(object):
     # Flask App
     CSRF_ENABLED = True

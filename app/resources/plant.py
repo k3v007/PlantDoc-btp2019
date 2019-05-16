@@ -13,7 +13,6 @@ plant_list_schema = PlantSchema(many=True)
 
 class Plant(Resource):
     @classmethod
-    @admin_required
     def get(cls, name: str):
         plant = PlantModel.find_by_name(name)
         if plant:
@@ -50,7 +49,7 @@ class RegisterPlants(Resource):
             db.session.add_all(plants)
             db.session.commit()
             return {"message": "All plant(s) registered successfully"}, 201
-        except:
+        except:     # noqa
             traceback.print_exc()
             return {"message": "Failed to register the plant(s)"}, 500
 

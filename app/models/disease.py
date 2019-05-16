@@ -5,17 +5,26 @@ class DiseaseModel(db.Model):
     __tablename__ = "diseases"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    treatment = db.Column(db.String(100), default=None)
+    nutshell = db.Column(db.Text(), default=None, nullable=True)
+    symptoms = db.Column(db.Text(), default=None, nullable=True)
+    trigger = db.Column(db.Text(), default=None, nullable=True)
+    biological_control = db.Column(db.Text(), default=None, nullable=True)
+    chemical_control = db.Column(db.Text(), default=None, nullable=True)
+    preventive_measures = db.Column(db.Text(), default=None, nullable=True)
     plant_id = db.Column(db.Integer, db.ForeignKey(
         'plants.id', ondelete='CASCADE'), nullable=False)
     __table_args__ = (db.UniqueConstraint('name', 'plant_id'), )
 
     def __repr__(self):
-        return f"Disease(id: {self.id}, name: {self.name}, treatment: {self.treatment}, plant_id: {self.plant_id})"
+        return f"Disease(id: {self.id}, name: {self.name}, plant_id: {self.plant_id})"  # noqa
 
     @classmethod
     def find_all(cls):
         return cls.query.all()
+
+    @classmethod
+    def find_all_by_plant(cls, plant_id: int):
+        return cls.query.filter_by(plant_id=plant_id).all()
 
     @classmethod
     def find_by_id(cls, _id: int):

@@ -8,6 +8,7 @@ class DiseaseSchema(ma.ModelSchema):
 
     class Meta:
         model = DiseaseModel
+        ordered = True
         load_only = ("plant_dis", )
         dump_only = ("plant_id", )
         include_fk = True
