@@ -10,9 +10,6 @@
 # static images under sub-folder of users
 /app/static/images/*/
 
-# migration files
-/migrations/
-
 # environment file
 .env
 /envs
