@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 from flask import Blueprint, Flask
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
@@ -23,12 +24,14 @@ from app.schemas import ma  # noqa
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 jwt = JWTManager()
+cors = CORS()
 
 
 def create_app():
     app = Flask(__name__)
     # app.config.from_object(config_class)
     app.config.from_object(os.environ['APP_SETTINGS'])
+    cors.init_app(app)
     db.init_app(app)
     ma.init_app(app)
     jwt.init_app(app)
