@@ -11,6 +11,7 @@ docutils==0.14
 entrypoints==0.3
 flake8==3.7.7
 Flask==1.0.2
+Flask-Cors==3.0.7
 Flask-JWT-Extended==3.18.0
 Flask-Mail==0.9.1
 flask-marshmallow==0.10.0
