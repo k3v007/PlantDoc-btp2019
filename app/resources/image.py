@@ -28,14 +28,14 @@ ALLOWED_IMAGE_EXT = tuple("bmp gif jpg jpeg png".split())
 
 class ImageUpload(Resource):
     @classmethod
-    # @jwt_required
+    @jwt_required
     def post(cls, plant_name: str):
         image = image_schema.load(request.files)["image"]
-        # user_id = get_jwt_identity()
-        # user = UserModel.find_by_id(user_id)
+        user_id = get_jwt_identity()
+        user = UserModel.find_by_id(user_id)
         plant = PlantModel.find_by_name(plant_name)
 
-        # user_folder = f"user_{user.user_uuid}"
+        user_folder = f"user_{user.user_uuid}"
         ext = os.path.splitext(image.filename)[1]
         image.filename = token_hex(8) + ext     # setting random name
 
@@ -45,7 +45,7 @@ class ImageUpload(Resource):
 
         # save image
         try:
-            image_path = upload_image(image, folder="temp")
+            image_path = upload_image(image, folder=user_folder)
         except:     # noqa
             return {"message": "Not a valid image"}, 400
         
@@ -58,17 +58,17 @@ class ImageUpload(Resource):
         #     delete_image(image_path)
         #     return {"message": "ML model processing failed"}, 500
 
-        # try:
-        #     # saving image into database
-        #     image_data = ImageModel(
-        #         image_path=image_path, plant_id=plant.id,
-        #         user_id=user_id
-        #     )
-        #     db.session.add(image_data)
-        #     db.session.commit()
-        # except:     # noqa
-        #     traceback.print_exc()
-        #     return {"message": "failed to save image to database"}, 500
+        try:
+            # saving image into database
+            image_data = ImageModel(
+                image_path=image_path, plant_id=plant.id,
+                user_id=user_id
+            )
+            db.session.add(image_data)
+            db.session.commit()
+        except:     # noqa
+            traceback.print_exc()
+            return {"message": "failed to save image to database"}, 500
 
         # return {"result": disease_result}
         return {"message": "Image uploaded successfully!"}, 200
@@ -79,7 +79,8 @@ class ImageB64Upload(Resource):
     @jwt_required
     def post(cls, plant_name: str):
         json_data = request.get_json()
-        image = img_b64_schema.load(json_data)
+        image_string = img_b64_schema.load(json_data)
+
         current_app.logger.info(f"image_b64: {image['image_b64']}")
 
         return {"message": image["image_b64"]}, 200
