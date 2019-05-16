@@ -30,3 +30,7 @@ class ImageModelSchema(ma.ModelSchema):
         load_only = ("user", "plant_img", "image_path")
         dump_only = ("image_url")
         include_fk = True
+
+
+class ImageB64Schema(Schema):
+    image_string: fields.String(required=True)

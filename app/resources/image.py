@@ -13,12 +13,13 @@ from app.models.image import ImageModel
 from app.models.plant import PlantModel
 from app.models.user import UserModel
 from app.predict import predict_disease
-from app.schemas.image import ImageModelSchema, ImageSchema
+from app.schemas.image import ImageModelSchema, ImageSchema, ImageB64Schema
 from app.utils import admin_required, delete_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
 img_list_schema = ImageModelSchema(many=True)
+img_b64_schema = ImageB64Schema()
 
 # set allowed extensions
 ALLOWED_IMAGE_EXT = tuple("bmp gif jpg jpeg png".split())
@@ -70,6 +71,16 @@ class ImageUpload(Resource):
 
         # return {"result": disease_result}
         return {"message": "Image uploaded successfully!"}, 200
+
+
+class ImageB64Upload(Resource):
+    @classmethod
+    @jwt_required
+    def post(cls, plant_name: str):
+        json_data = request.get_json()
+        image = img_b64_schema.load(json_data)
+
+        return {"message": image["image_string"]}, 200
 
 
 class ImageList(Resource):

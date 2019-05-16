@@ -14,7 +14,7 @@ from app.resources import oauth  # noqa
 from app.resources.disease import (Disease, DiseaseList,  # noqa
                                    RegisterDiseases)
 from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
-from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
+from app.resources.image import ImageList, ImageListOfUser, ImageUpload, ImageB64Upload  # noqa
 from app.resources.plant import Plant, PlantList, RegisterPlants  # noqa
 from app.resources.user import (TokenRefresh, User, UserList,  # noqa
                                 UserLogin, UserLogout, UserRegister)
@@ -50,6 +50,7 @@ def create_app():
     api.add_resource(DiseaseList, '/api/diseases')
     api.add_resource(RegisterDiseases, '/api/register/diseases')
     api.add_resource(ImageUpload, "/api/upload/image/<string:plant_name>")
+    api.add_resource(ImageB64Upload, "/api/upload_b64/image/<string:plant_name>")   # noqa
     api.add_resource(ImageList, "/api/images")
     api.add_resource(ImageListOfUser, "/api/user/images")
     api.add_resource(GoogleLogin, "/login/google")
