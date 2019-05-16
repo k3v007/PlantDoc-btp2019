@@ -13,7 +13,7 @@ from app.resources import oauth     # noqa
 from app.resources.disease import (Disease, DiseaseList,  DiseaseListOfPlant,   # noqa
                                    RegisterDiseases, UpdateDisease)
 from app.resources.google_login import GoogleLogin, GoogleAuthorize     # noqa
-from app.resources.image import ImageList, ImageUpload      # noqa
+from app.resources.image import ImageList, ImageUpload, ImageB64Upload      # noqa
 from app.resources.plant import Plant, PlantList, RegisterPlants    # noqa
 from app.resources.user import (User, UserLogin, UserRegister, UserList,    # noqa
                                 UserLogout, TokenRefresh)
@@ -49,6 +49,7 @@ def create_app():
     api.add_resource(RegisterDiseases, '/api/register/diseases')
     api.add_resource(UpdateDisease, '/api/update/disease/<int:disease_id>')
     api.add_resource(ImageUpload, "/api/upload/image/<string:plant_name>")
+    api.add_resource(ImageB64Upload, "/api/upload_b64/image/<string:plant_name>")
     api.add_resource(ImageList, "/api/images")
     api.add_resource(GoogleLogin, "/login/google")
     api.add_resource(GoogleAuthorize, "/login/google/authorized",

@@ -28,3 +28,7 @@ class ImageModelSchema(ma.ModelSchema):
         model = ImageModel
         load_only = ("user", "plant_img")
         include_fk = True
+
+
+class ImageB64Schema(Schema):
+    image_string = fields.String(required=True)
