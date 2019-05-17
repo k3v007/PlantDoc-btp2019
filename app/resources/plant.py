@@ -1,11 +1,13 @@
-from flask_restful import Resource
-from app.utils import admin_required
-from app.schemas.plant import PlantSchema
-from app.models.plant import PlantModel
-from app.models import db
-from flask import request
 import traceback
 
+from flask import request
+from flask_jwt_extended import jwt_required
+from flask_restful import Resource
+
+from app.models import db
+from app.models.plant import PlantModel
+from app.schemas.plant import PlantSchema
+from app.utils import admin_required
 
 plant_schema = PlantSchema()
 plant_list_schema = PlantSchema(many=True)
@@ -13,6 +15,7 @@ plant_list_schema = PlantSchema(many=True)
 
 class Plant(Resource):
     @classmethod
+    @jwt_required
     def get(cls, name: str):
         plant = PlantModel.find_by_name(name)
         if plant:
@@ -56,6 +59,6 @@ class RegisterPlants(Resource):
 
 class PlantList(Resource):
     @classmethod
-    @admin_required
+    @jwt_required
     def get(cls):
         return {"plants": plant_list_schema.dump(PlantModel.find_all())}, 200
