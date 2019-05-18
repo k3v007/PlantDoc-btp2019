@@ -7,8 +7,8 @@ from app.resources import oauth
 # Google oauth settings
 google = oauth.remote_app(
     'google',
-    consumer_key=os.getenv('GOOGLE_ID'),
-    consumer_secret=os.getenv('GOOGLE_SECRET'),
+    consumer_key=os.environ['GOOGLE_ID'],
+    consumer_secret=os.environ['GOOGLE_SECRET'],
     request_token_params={
         'scope': ['email', 'profile']
     },

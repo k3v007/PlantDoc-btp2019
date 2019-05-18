@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
 from werkzeug.datastructures import FileStorage
+
 from app.models.image import ImageModel
 from app.schemas import ma
 
@@ -26,9 +27,10 @@ class ImageSchema(Schema):
 class ImageModelSchema(ma.ModelSchema):
     class Meta:
         model = ImageModel
-        load_only = ("user", "plant_img")
+        load_only = ("user", "plant_img", "image_path")
+        dump_only = ("image_url")
         include_fk = True
 
 
 class ImageB64Schema(Schema):
-    image_string = fields.String(required=True)
+    image_b64 = fields.String(required=True)

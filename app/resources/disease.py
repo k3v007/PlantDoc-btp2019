@@ -1,12 +1,14 @@
-from flask_restful import Resource
-from app.utils import admin_required
-from app.schemas.disease import DiseaseSchema
-from app.models.disease import DiseaseModel
-from app.models.plant import PlantModel
-from app.models import db
-from flask import request
 import traceback
 
+from flask import request
+from flask_jwt_extended import jwt_required
+from flask_restful import Resource
+
+from app.models import db
+from app.models.disease import DiseaseModel
+from app.models.plant import PlantModel
+from app.schemas.disease import DiseaseSchema
+from app.utils import admin_required
 
 disease_schema = DiseaseSchema()
 disease_list_schema = DiseaseSchema(many=True)
@@ -14,6 +16,7 @@ disease_list_schema = DiseaseSchema(many=True)
 
 class Disease(Resource):
     @classmethod
+    @jwt_required
     def get(cls, disease_id: int):
         disease = DiseaseModel.find_by_id(disease_id)
         if disease:
@@ -90,6 +93,7 @@ class UpdateDisease(Resource):
 
 class DiseaseListOfPlant(Resource):
     @classmethod
+    @jwt_required
     def get(cls, plant_id: int):
         plant = PlantModel.query.get(plant_id)
         if plant is not None:

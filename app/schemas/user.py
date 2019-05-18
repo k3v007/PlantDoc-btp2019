@@ -6,4 +6,5 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         ordered = True
         model = UserModel
+        ordered = True
         load_only = ("images", "password")

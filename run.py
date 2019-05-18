@@ -1,3 +1,5 @@
+import logging
+
 from flask import jsonify
 from marshmallow import ValidationError
 
@@ -17,6 +19,12 @@ def handle_marshmallow_validation(err):
 def check_if_token_in_blacklist(decrypted_token):
     jti = decrypted_token['jti']
     return jti in blacklist
+
+
+if __name__ != "__main__":
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
 
 
 if __name__ == "__main__":
