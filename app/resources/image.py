@@ -1,7 +1,5 @@
-import logging
 import os
-import traceback
-from secrets import token_hex
+from datetime import datetime
 
 from flask import current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -15,7 +13,7 @@ from app.models.plant import PlantModel
 from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageB64Schema, ImageModelSchema, ImageSchema
-from app.utils import delete_image, save_image
+from app.utils import APP_DIR_PATH, delete_image, save_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
@@ -34,44 +32,61 @@ class ImageUpload(Resource):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         plant = PlantModel.find_by_id(plant_id)
+        if plant is None:
+            return {"message": "Wrong plant id provided."}, 400
 
         user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
-        image.filename = token_hex(8) + ext     # setting random name
+        upload_dt = datetime.now()
+        dt_format = f"user{user_id}_%H:%M:%S_%d-%m-%Y"
+        image.filename = upload_dt.strftime(dt_format) + ext
 
         # Check for allowed image extensions
         if ext[1:] not in ALLOWED_IMAGE_EXT:
             return {"messages": f"Extension {ext} not allowed."}, 400
 
-        # save image
+        # save client image on disk
+        # file should be of image type only
         try:
             image_path = save_image(image, folder=user_folder)
         except:     # noqa
             return {"message": "Not a valid image"}, 400
 
-        # return {"image_path": image_path}, 200
-
-        # try:
-        #     disease_result = predict_disease(image_path, plant_name)
-        # except:     # noqa
-        #     traceback.print_exc()
-        #     delete_image(image_path)
-        #     return {"message": "ML model processing failed"}, 500
-
+        # predict the disease
         try:
-            # saving image into database
+            model_path = os.path.join(APP_DIR_PATH,
+                                      'disease_prediction_models',
+                                      plant.name)
+            result = predict_disease(image_path, model_path)
+            disease = DiseaseModel.find_by_plant(name=result["Disease"],
+                                                 plant_id=plant.id)
+            # Check if disease name is properly registerd
+            if disease is None:
+                current_app.loggger.error(f"Predicted disease <{predicted_disease}> not found!")    # noqa
+                delete_image(image_path)
+                return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+
+        except Exception as e:     # noqa 
+            current_app.logger.error(e.args[0])
+            delete_image(image_path)
+            return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+
+        # save image into database
+        try:
             image_data = ImageModel(
                 image_path=image_path, plant_id=plant.id,
-                user_id=user_id
+                user_id=user_id, disease_id=disease.id,
+                upload_date=upload_dt,
             )
             db.session.add(image_data)
             db.session.commit()
-        except:     # noqa
-            traceback.print_exc()
-            return {"message": "failed to save image to database"}, 500
+        except Exception as e:     # noqa
+            current_app.logger.error(e.args[0])
+            delete_image(image_path)
+            return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
 
-        # return {"result": disease_result}
-        return {"message": "Image uploaded successfully!"}, 200
+        # if all above processes completed successfully, then return result
+        return result, 200
 
 
 # class ImageB64Upload(Resource):

@@ -27,8 +27,8 @@ class ImageSchema(Schema):
 class ImageModelSchema(ma.ModelSchema):
     class Meta:
         model = ImageModel
-        load_only = ("user", "plant_img", "image_path")
-        dump_only = ("image_url")
+        ordered = True
+        load_only = ("user", "plant_img",)
         include_fk = True
 
 
