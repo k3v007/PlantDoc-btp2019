@@ -6,9 +6,9 @@ from app.models import db
 class ImageModel(db.Model):
     __tablename__ = "images"
     id = db.Column(db.Integer, primary_key=True)
-    image_path = db.Column(db.String(100), nullable=False, unique=True)
+    image_path = db.Column(db.String(250), nullable=False, unique=True)
     upload_date = db.Column(db.DateTime, nullable=False,
-                            default=datetime.utcnow())
+                            default=datetime.now)
     plant_id = db.Column(db.Integer, db.ForeignKey(
         'plants.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(
