@@ -37,6 +37,7 @@ class GoogleAuthorize(Resource):
             password = generate_password_hash(token_hex(16))
             user = UserModel(name=name, email=email, password=password)
             user.save_to_db()
+            user.create_img_dir()
 
         access_token = create_access_token(identity=user.id, fresh=True)
         refresh_token = create_refresh_token(identity=user.id)

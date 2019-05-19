@@ -1,10 +1,11 @@
+import os
 from typing import List
-from uuid import uuid4
 
 from werkzeug.security import check_password_hash
 
 from app.models import db
-from app.models.image import ImageModel     # noqa
+from app.models.image import ImageModel  # noqa
+from app.utils import IMAGE_DIR_PATH
 
 
 class UserModel(db.Model):
@@ -14,12 +15,12 @@ class UserModel(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
-    user_uuid = db.Column(db.String(32), nullable=False, default=uuid4().hex)
+    user_dir = db.Column(db.String(32), nullable=False, default="user")
     images = db.relationship(
         'ImageModel', backref="user",  cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
-        return f"User(user_uuid: {self.user_uuid}, name: {self.name}, email: {self.email}, admin: {self.admin})"    # noqa
+        return f"User(name: {self.name}, email: {self.email})"    # noqa
 
     @classmethod
     def find_by_id(cls, _id: int) -> "UserModel":
@@ -37,6 +38,12 @@ class UserModel(db.Model):
         return check_password_hash(self.password, password)
 
     def save_to_db(self) -> None:
+        db.session.add(self)
+        db.session.commit()
+
+    def create_img_dir(self) -> None:
+        self.user_dir = "-".join(["user", str(self.id), self.email])
+        os.makedirs(os.path.join(IMAGE_DIR_PATH, self.user_dir))
         db.session.add(self)
         db.session.commit()
 

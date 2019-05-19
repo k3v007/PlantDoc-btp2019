@@ -8,3 +8,4 @@ class UserSchema(ma.ModelSchema):
         model = UserModel
         ordered = True
         load_only = ("images", "password")
+        dump_only = ("user_dir",)

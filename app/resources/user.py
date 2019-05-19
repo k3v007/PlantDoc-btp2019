@@ -1,3 +1,4 @@
+import os
 import traceback
 
 from flask import request
@@ -9,9 +10,10 @@ from flask_restful import Resource
 from werkzeug.security import generate_password_hash
 
 from app.blacklist import blacklist
+from app.custom import admin_required
 from app.models.user import UserModel
 from app.schemas.user import UserSchema
-from app.utils import admin_required
+from app.utils import IMAGE_DIR_PATH
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
@@ -30,8 +32,9 @@ class UserRegister(Resource):
         try:
             user.password = generate_password_hash(user.password)
             user.save_to_db()
+            user.create_img_dir()
             return {"message": "User created successfully"}, 201
-        except:
+        except:     # noqa
             traceback.print_exc()
             return {"message": "Failed to create the user"}, 500
 
