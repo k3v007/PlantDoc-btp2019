@@ -4,10 +4,10 @@ from flask import request
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
+from app.custom import admin_required
 from app.models import db
 from app.models.plant import PlantModel
 from app.schemas.plant import PlantSchema
-from app.utils import admin_required
 
 plant_schema = PlantSchema()
 plant_list_schema = PlantSchema(many=True)

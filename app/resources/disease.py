@@ -8,7 +8,7 @@ from app.models import db
 from app.models.disease import DiseaseModel
 from app.models.plant import PlantModel
 from app.schemas.disease import DiseaseSchema
-from app.utils import admin_required
+from app.custom import admin_required
 
 disease_schema = DiseaseSchema()
 disease_list_schema = DiseaseSchema(many=True)

@@ -7,6 +7,7 @@ from flask import current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 
+from app.custom import admin_required
 from app.models import db
 from app.models.disease import DiseaseModel
 from app.models.image import ImageModel
@@ -14,7 +15,7 @@ from app.models.plant import PlantModel
 from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageB64Schema, ImageModelSchema, ImageSchema
-from app.utils import admin_required, delete_image, save_image
+from app.utils import delete_image, save_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
@@ -28,13 +29,13 @@ ALLOWED_IMAGE_EXT = tuple("bmp gif jpg jpeg png".split())
 class ImageUpload(Resource):
     @classmethod
     @jwt_required
-    def post(cls, plant_name: str):
+    def post(cls, plant_id: int):
         image = image_schema.load(request.files)["image"]
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
-        plant = PlantModel.find_by_name(plant_name)
+        plant = PlantModel.find_by_id(plant_id)
 
-        user_folder = f"user_{user.user_uuid}"
+        user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
         image.filename = token_hex(8) + ext     # setting random name
 
@@ -83,7 +84,7 @@ class ImageUpload(Resource):
 #         plant = PlantModel.find_by_name(plant_name)
 #         image_string = img_b64_schema.load(json_data)["image_b64"]
 
-#         user_folder = f"user_{user.user_uuid}"
+#         user_folder = user.user_folder
 
 #         # save image
 #         try:
