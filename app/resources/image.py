@@ -7,15 +7,14 @@ from flask import current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource
 
-from app.aws import upload_image, upload_b64_image
 from app.models import db
 from app.models.disease import DiseaseModel
 from app.models.image import ImageModel
 from app.models.plant import PlantModel
 from app.models.user import UserModel
 from app.predict import predict_disease
-from app.schemas.image import ImageModelSchema, ImageSchema, ImageB64Schema
-from app.utils import admin_required, delete_image
+from app.schemas.image import ImageB64Schema, ImageModelSchema, ImageSchema
+from app.utils import admin_required, delete_image, save_image
 
 image_schema = ImageSchema()
 img_schema = ImageModelSchema()
@@ -45,7 +44,7 @@ class ImageUpload(Resource):
 
         # save image
         try:
-            image_path = upload_image(image, folder=user_folder)
+            image_path = save_image(image, folder=user_folder)
         except:     # noqa
             return {"message": "Not a valid image"}, 400
 
@@ -74,48 +73,38 @@ class ImageUpload(Resource):
         return {"message": "Image uploaded successfully!"}, 200
 
 
-class ImageB64Upload(Resource):
-    @classmethod
-    @jwt_required
-    def post(cls, plant_name: str):
-        json_data = request.get_json()
-        user_id = get_jwt_identity()
-        user = UserModel.find_by_id(user_id)
-        plant = PlantModel.find_by_name(plant_name)
-        image_string = img_b64_schema.load(json_data)["image_b64"]
+# class ImageB64Upload(Resource):
+#     @classmethod
+#     @jwt_required
+#     def post(cls, plant_name: str):
+#         json_data = request.get_json()
+#         user_id = get_jwt_identity()
+#         user = UserModel.find_by_id(user_id)
+#         plant = PlantModel.find_by_name(plant_name)
+#         image_string = img_b64_schema.load(json_data)["image_b64"]
 
-        user_folder = f"user_{user.user_uuid}"
+#         user_folder = f"user_{user.user_uuid}"
 
-        # save image
-        try:
-            image_path = upload_b64_image(image_string, folder=user_folder)
-        except:     # noqa
-            return {"message": "Not a valid base64 string"}, 400
+#         # save image
+#         try:
+#             image_path = save_image(image_string, folder=user_folder)
+#         except:     # noqa
+#             return {"message": "Not a valid base64 string"}, 400
 
-        try:
-            # saving image into database
-            image_data = ImageModel(
-                image_path=image_path, plant_id=plant.id,
-                user_id=user_id
-            )
-            db.session.add(image_data)
-            db.session.commit()
-        except:     # noqa
-            traceback.print_exc()
-            return {"message": "Failed to save image to database"}, 500
+#         try:
+#             # saving image into database
+#             image_data = ImageModel(
+#                 image_path=image_path, plant_id=plant.id,
+#                 user_id=user_id
+#             )
+#             db.session.add(image_data)
+#             db.session.commit()
+#         except:     # noqa
+#             traceback.print_exc()
+#             return {"message": "Failed to save image to database"}, 500
 
-        # current_app.logger.info(f"image_b64: {image_string['image_b64']}")
-        return {"message": "Image uploaded Successfully."}, 200
-
-
-class ImageB64Upload(Resource):
-    @classmethod
-    @jwt_required
-    def post(cls, plant_name: str):
-        json_data = request.get_json()
-        image = img_b64_schema.load(json_data)
-
-        return {"message": image["image_string"]}, 200
+#         # current_app.logger.info(f"image_b64: {image_string['image_b64']}")
+#         return {"message": "Image uploaded Successfully."}, 200
 
 
 class ImageList(Resource):
