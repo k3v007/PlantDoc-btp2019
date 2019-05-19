@@ -15,4 +15,4 @@
 /envs
 
 # trained_models folders
-/app/tf_disease_classifier/trained_models/*/
+/app/disease_prediction_models/*/
