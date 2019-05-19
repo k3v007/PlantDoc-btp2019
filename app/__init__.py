@@ -51,7 +51,7 @@ def create_app():
     api.add_resource(DiseaseListOfPlant, '/api/diseases/<int:plant_id>')
     api.add_resource(RegisterDiseases, '/api/register/diseases')
     api.add_resource(UpdateDisease, '/api/update/disease/<int:disease_id>')
-    api.add_resource(ImageUpload, "/api/upload/image/<string:plant_name>")
+    api.add_resource(ImageUpload, "/api/upload/image/<int:plant_id>")
     api.add_resource(ImageList, "/api/images")
     api.add_resource(ImageListOfUser, "/api/user/images")
     api.add_resource(GoogleLogin, "/login/google")
