@@ -4,12 +4,6 @@ from PIL import Image
 from werkzeug.datastructures import FileStorage
 
 
-APP_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-
-# set directory path for saving images
-IMAGE_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "images")
-
-
 # ==============================================================================
 
 # Helper tools for images

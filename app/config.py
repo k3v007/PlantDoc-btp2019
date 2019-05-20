@@ -10,6 +10,9 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     TESTING = False
     THREADED = True
+    APP_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+    CLIENTS_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "clients")
+    TEMP_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "clients", "temp")
     # JWT
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh", ]

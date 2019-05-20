@@ -13,7 +13,7 @@ def admin_required(fn):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(_id=user_id)
         if not user.admin:
-            return {"msg": "Admins only"}, 403
+            return {"msg": "Admin authorization required"}, 403
         else:
             return fn(*args, **kwargs)
     return wrapper

@@ -1,7 +1,4 @@
-import os
-import traceback
-
-from flask import request
+from flask import current_app, request
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 fresh_jwt_required, get_jwt_identity,
                                 get_raw_jwt, jwt_refresh_token_required,
@@ -11,90 +8,117 @@ from werkzeug.security import generate_password_hash
 
 from app.blacklist import blacklist
 from app.custom import admin_required
+from app.models.image import ImageModel
 from app.models.user import UserModel
+from app.schemas.image import ImageModelSchema
 from app.schemas.user import UserSchema
-from app.utils import IMAGE_DIR_PATH
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
+image_list_schema = ImageModelSchema(many=True)
 
 
-# for user register
-class UserRegister(Resource):
+# For all users resource
+class Users(Resource):
+    # Get all the users
+    @classmethod
+    @admin_required
+    def get(cls):
+        users = UserModel.find_all()
+        return {"users": user_list_schema.dump(users)}, 200
+
+    # Register a user
     @classmethod
     def post(cls):
         user_json = request.get_json()
         user = user_schema.load(user_json)
         if UserModel.find_by_email(user.email):
-            return {"message": "User already exists"}, 400
-        print(user)
+            current_app.logger.debug(f"Email<{user.email}> already registered")
+            return {"msg": "User already registered"}, 400
+
+        if len(user.password) < 4:
+            current_app.logger.error(f"Password-len<{len(user.password)}> not allowed")     # noqa
+            raise AssertionError("Password length should be greater than 4 characters.")    # noqa
 
         try:
+            user.name = ' '.join([i.capitalize() for i in user.name.split()])
             user.password = generate_password_hash(user.password)
             user.save_to_db()
-            user.create_img_dir()
-            return {"message": "User created successfully"}, 201
-        except:     # noqa
-            traceback.print_exc()
-            return {"message": "Failed to create the user"}, 500
+            current_app.logger.info(f"Registered {user} successfully")
+            return {"msg": "You have successfully registered"}, 201
+        except Exception as err:     # noqa
+            current_app.logger.error(err)
+            return {"msg": "Failed to register the user"}, 500
 
 
-# for user login
-class UserLogin(Resource):
-    @classmethod
-    def post(cls):
-        user_json = request.get_json()
-        user_data = user_schema.load(user_json, partial=("name",))
-        user = UserModel.find_by_email(user_data.email)
-        if user and user.check_password(user_data.password):
-            access_token = create_access_token(identity=user.id, fresh=True)
-            refresh_token = create_refresh_token(identity=user.id)
-            return {"access_token": access_token, 
-                    "refresh_token": refresh_token}, 200
-
-        return {"message": "Invalid Credentials."}, 401
-
-
-class UserLogout(Resource):
-    @classmethod
-    @jwt_required
-    def post(cls):
-        # jti is "JWT ID", a unique identifier for a JWT.
-        jti = get_raw_jwt()["jti"]
-        user_id = get_jwt_identity()
-        blacklist.add(jti)
-        return {"message": f"User id '{user_id}' has been logged out successfully"}, 200
-
-
-# for admin purposes
-class User(Resource):
+# For user resource by ID
+class UsersID(Resource):
+    # Get user
     @classmethod
     @admin_required
     def get(cls, user_id):
         user = UserModel.find_by_id(_id=user_id)
         if not user:
-            return {"message": "User not found"}, 404
+            current_app.logger.debug(f"User-id<{user_id}> not found.")
+            return {"msg": f"User[id={user_id}] not found"}, 404
         return user_schema.dump(user), 200
 
+    # Delete user
     @classmethod
     @admin_required
     @fresh_jwt_required
     def delete(cls, user_id):
         user = UserModel.find_by_id(_id=user_id)
         if not user:
-            return {"message": "User not found"}, 404
+            current_app.logger.debug(f"User-id<{user_id}> not found.")
+            return {"msg": f"User[id={user_id}] not found"}, 404
         if user.id == get_jwt_identity():
-            return {"message": "Action forbidden!"}, 403
-        user.delete_from_db()
-        return {"message": "User successfully deleted."}, 200
+            current_app.logger.debug(f"Admin can't delete themselves.")
+            return {"msg": "Delete own account not allowed."}, 403
+        try:
+            user.delete_from_db()
+            current_app.logger.info(f"Deleted user<{user}")
+            return {"msg": "User has been successfully deleted."}, 200
+        except Exception as err:     # noqa
+            current_app.logger.error(err)
+            return {"msg": "Failed to delete the user"}, 500
 
 
-class UserList(Resource):
+class UsersImages(Resource):
     @classmethod
-    @admin_required
+    @jwt_required
     def get(cls):
-        users = UserModel.find_all()
-        return {"users": user_list_schema.dump(users)}, 200
+        user_id = get_jwt_identity()
+        return {"images": image_list_schema.dump(ImageModel.find_by_user(user_id))}     # noqa
+
+
+# for user login
+class Login(Resource):
+    @classmethod
+    def post(cls):
+        user_json = request.get_json()
+        user_data = user_schema.load(user_json, partial=("name",))
+        user = UserModel.find_by_email(user_data.email)
+        if user and user.verify_password(user_data.password):
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(identity=user.id)
+            return {"access_token": access_token,
+                    "refresh_token": refresh_token}, 200
+        current_app.logger.info(f"{user} login failed.")
+        return {"msg": "Invalid Credentials."}, 401
+
+
+class Logout(Resource):
+    @classmethod
+    @jwt_required
+    def post(cls):
+        # jti is "JWT ID", a unique identifier for a JWT.
+        jti = get_raw_jwt()["jti"]
+        user_id = get_jwt_identity()
+        user = UserModel.find_by_id(user_id)
+        blacklist.add(jti)
+        current_app.logger.info(f"{user} logged out.")
+        return {"msg": f"User[id={user_id}] has been logged out successfully"}, 200    # noqa
 
 
 class TokenRefresh(Resource):
@@ -102,5 +126,7 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(cls):
         current_user = get_jwt_identity()
+        user = UserModel.find_by_id(current_user)
         new_token = create_access_token(identity=current_user, fresh=False)
+        current_app.logger.debug(f"Acces token refreshed by {user}")
         return {"access_token": new_token}, 200
