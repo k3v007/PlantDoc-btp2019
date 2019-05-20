@@ -11,11 +11,12 @@ from app.custom import admin_required
 from app.models.image import ImageModel
 from app.models.user import UserModel
 from app.schemas.image import ImageModelSchema
-from app.schemas.user import UserSchema
+from app.schemas.user import UserSchema, UserUpdateSchema
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
 image_list_schema = ImageModelSchema(many=True)
+user_update_schema = UserUpdateSchema()
 
 
 # For all users resource
@@ -41,6 +42,7 @@ class Users(Resource):
             raise AssertionError("Password length should be greater than 4 characters.")    # noqa
 
         try:
+            print(user)
             user.name = ' '.join([i.capitalize() for i in user.name.split()])
             user.password = generate_password_hash(user.password)
             user.save_to_db()
@@ -63,6 +65,25 @@ class UsersID(Resource):
             return {"msg": f"User[id={user_id}] not found"}, 404
         return user_schema.dump(user), 200
 
+    # Update user information
+    @classmethod
+    @admin_required
+    def put(cls, user_id):
+        user = UserModel.find_by_id(_id=user_id)
+        if not user:
+            current_app.logger.debug(f"User-id<{user_id}> not found.")
+            return {"msg": f"User[id={user_id}] not found"}, 404
+
+        data = user_update_schema.load(request.get_json())
+        user.name = data["name"]
+        user.active = data["active"]
+        try:
+            user.save_to_db()
+            return {"msg": "User's info has been successfully updated"}, 201
+        except Exception as err:     # noqa
+            current_app.logger.error(err)
+            return {"msg": "Failed to update the user's info"}, 500
+
     # Delete user
     @classmethod
     @admin_required
@@ -84,12 +105,13 @@ class UsersID(Resource):
             return {"msg": "Failed to delete the user"}, 500
 
 
+# Get all images of a User
 class UsersImages(Resource):
     @classmethod
     @jwt_required
     def get(cls):
         user_id = get_jwt_identity()
-        return {"images": image_list_schema.dump(ImageModel.find_by_user(user_id))}     # noqa
+        return {"images": image_list_schema.dump(ImageModel.findAll_by_user(user_id))}     # noqa
 
 
 # for user login
@@ -108,6 +130,7 @@ class Login(Resource):
         return {"msg": "Invalid Credentials."}, 401
 
 
+# for user logout
 class Logout(Resource):
     @classmethod
     @jwt_required
@@ -121,6 +144,7 @@ class Logout(Resource):
         return {"msg": f"User[id={user_id}] has been logged out successfully"}, 200    # noqa
 
 
+# for refreshing access token using acces token
 class TokenRefresh(Resource):
     @classmethod
     @jwt_refresh_token_required

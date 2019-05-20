@@ -31,10 +31,20 @@ class UserModel(db.Model):
     def __repr__(self):
         return f"User({self.name}, {self.email})"
 
+    @validates('name')
+    def validate_name(cls, key, name):
+        if name is None:
+            raise AssertionError("No name provided.")
+        name = name.strip()
+        if name == "":
+            raise AssertionError("Empty string not allowed")
+        return name
+
     @validates('email')
     def validate_email(cls, key, email):
         if email is None:
             raise AssertionError("No email provided.")
+        email = email.strip()
         if not re.match('^(\D)+(\w)*((\.(\w)+)?)+@(\D)+(\w)*((\.(\D)+(\w)*)+)?(\.)[a-z]{2,}$', email):  # noqa
             raise AssertionError("Invalid email provided.")
         return email
