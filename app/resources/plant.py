@@ -14,12 +14,15 @@ from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageModelSchema, ImageSchema
 from app.schemas.plant import PlantSchema
+from app.schemas.disease import DiseaseSchema
 from app.utils import delete_image, save_image
 
 plant_schema = PlantSchema()
 plant_list_schema = PlantSchema(many=True)
 img_schema = ImageModelSchema()
+img_list_schema = ImageModelSchema(many=True)
 image_schema = ImageSchema()
+disease_list_schema = DiseaseSchema(many=True)
 
 
 # for plants
@@ -92,7 +95,10 @@ class PlantsImages(Resource):
         plant = PlantModel.find_by_id(plant_id)
         if plant is None:
             return {"msg": f"Plant[id={plant_id}] not found."}, 404
-        return {"images": plant_list_schema.dump(ImageModel.findAll_by_plant(plant_id))}, 200  # noqa
+        return {
+            "plant": plant_schema.dump(plant),
+            "images": img_list_schema.dump(ImageModel.findAll_by_plant(plant_id))   # noqa
+        }, 200
 
     @classmethod
     @jwt_required
@@ -165,4 +171,7 @@ class PlantsDiseases(Resource):
         plant = PlantModel.find_by_id(plant_id)
         if plant is None:
             return {"msg": f"Plant[id={plant_id}] not found."}, 404
-        return {"diseases": plant_list_schema.dump(DiseaseModel.findAll_by_plant(plant_id))}, 200  # noqa
+        return {
+            "plant": plant_schema.dump(plant),
+            "diseases": disease_list_schema.dump(DiseaseModel.findAll_by_plant(plant_id))   # noqa
+        }, 200
