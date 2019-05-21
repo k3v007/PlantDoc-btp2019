@@ -9,14 +9,14 @@ from app.models.user import UserModel
 from app.oauth_app import google
 
 
-class GoogleLogin(Resource):
+class GoogleLoginOauth(Resource):
     @classmethod
     def get(cls):
         return google.authorize(url_for("api.google_authorize",
                                         _external=True))
 
 
-class GoogleAuthorize(Resource):
+class GoogleAuthorizeOauth(Resource):
     @classmethod
     def get(cls):
         try:
@@ -32,12 +32,11 @@ class GoogleAuthorize(Resource):
 
         user = UserModel.find_by_email(google_data.data['email'])
         if user is None:
-            name = google_data.data['name'],
-            email = google_data.data['email'],
+            name = google_data.data['name']
+            email = google_data.data['email']
             password = generate_password_hash(token_hex(16))
             user = UserModel(name=name, email=email, password=password)
             user.save_to_db()
-            user.create_img_dir()
 
         access_token = create_access_token(identity=user.id, fresh=True)
         refresh_token = create_refresh_token(identity=user.id)

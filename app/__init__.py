@@ -12,7 +12,8 @@ from flask_restful import Api       # noqa
 from app.models import db  # noqa
 from app.resources import oauth  # noqa
 from app.resources.disease import Diseases, DiseasesID     # noqa
-from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
+from app.resources.google_login import (GoogleAuthorizeOauth,   # noqa
+                                        GoogleLoginOauth)
 from app.resources.image import Images, ImagesID  # noqa
 from app.resources.plant import (Plants, PlantsDiseases, PlantsID,  # noqa
                                  PlantsImages)
@@ -43,9 +44,9 @@ def create_app():
     api.add_resource(Login, '/login')
     api.add_resource(Logout, '/logout')
     api.add_resource(TokenRefresh, "/refresh")
-    api.add_resource(GoogleLogin, "/login/google")
-    api.add_resource(GoogleAuthorize, "/login/google/authorized",
-                                      endpoint="google_authorize")
+    api.add_resource(GoogleLoginOauth, "/login/google")
+    api.add_resource(GoogleAuthorizeOauth, "/login/google/authorized",
+                     endpoint="google_authorize")
 
     # Users
     api.add_resource(Users, '/api/v1/users')
