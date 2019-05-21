@@ -55,7 +55,7 @@ def predict_disease(img_path: str, model_path: str):
     # result
     result = {}
     result["Disease"] = disease_name
-    result["Probability"] = str(probability)
+    result["Probability"] = probability
     current_app.logger.info({"img_path": img_path, "result": result})
     kb.clear_session()
 
