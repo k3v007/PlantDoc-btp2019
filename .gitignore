@@ -9,6 +9,7 @@
 
 # static images under sub-folder of users
 /app/static/images/*/
+/app/static/clients/*/
 
 # environment file
 .env
