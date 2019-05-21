@@ -30,7 +30,3 @@ class ImageModelSchema(ma.ModelSchema):
         ordered = True
         load_only = ("user", "plant_img",)
         include_fk = True
-
-
-class ImageB64Schema(Schema):
-    image_b64 = fields.String(required=True)

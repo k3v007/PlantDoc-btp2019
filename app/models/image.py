@@ -9,6 +9,7 @@ class ImageModel(db.Model):
     image_path = db.Column(db.String(250), nullable=False, unique=True)
     upload_date = db.Column(db.DateTime(), nullable=False,
                             default=datetime.utcnow)
+    client_img_path = db.Column(db.String(250), default=None)
     plant_id = db.Column(db.Integer, db.ForeignKey(
         'plants.id', ondelete='CASCADE'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(
