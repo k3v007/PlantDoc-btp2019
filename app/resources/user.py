@@ -42,7 +42,6 @@ class Users(Resource):
             raise AssertionError("Password length should be greater than 4 characters.")    # noqa
 
         try:
-            print(user)
             user.name = ' '.join([i.capitalize() for i in user.name.split()])
             user.password = generate_password_hash(user.password)
             user.save_to_db()

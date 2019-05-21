@@ -13,7 +13,7 @@ from app.models import db  # noqa
 from app.resources import oauth  # noqa
 from app.resources.disease import Diseases, DiseasesID     # noqa
 from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
-from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
+from app.resources.image import Images, ImagesID  # noqa
 from app.resources.plant import (Plants, PlantsDiseases, PlantsID,  # noqa
                                  PlantsImages)
 from app.resources.user import (Login, Logout, TokenRefresh,    # noqa
@@ -63,9 +63,8 @@ def create_app():
     api.add_resource(DiseasesID, '/api/v1/diseases/<int:disease_id>')
 
     # Image
-    api.add_resource(ImageUpload, "/api/upload/image/<int:plant_id>")
-    api.add_resource(ImageList, "/api/images")
-    api.add_resource(ImageListOfUser, "/api/user/images")
+    api.add_resource(Images, "/api/v1/images")
+    api.add_resource(ImagesID, "/api/v1/images/<int:image_id>")
 
     from app.views import APP
     app.register_blueprint(APP)

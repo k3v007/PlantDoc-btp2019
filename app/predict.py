@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 from flask import current_app
 from keras import applications
+from keras import backend as kb
 from keras.layers import Dense, Dropout, Flatten
 from keras.models import Sequential
 from keras.preprocessing.image import img_to_array, load_img
@@ -56,5 +57,6 @@ def predict_disease(img_path: str, model_path: str):
     result["Disease"] = disease_name
     result["Probability"] = str(probability)
     current_app.logger.info({"img_path": img_path, "result": result})
+    kb.clear_session()
 
     return result

@@ -7,7 +7,7 @@ class ImageModel(db.Model):
     __tablename__ = "images"
     id = db.Column(db.Integer, primary_key=True)
     image_path = db.Column(db.String(250), nullable=False, unique=True)
-    upload_date = db.Column(db.DateTime, nullable=False,
+    upload_date = db.Column(db.DateTime(), nullable=False,
                             default=datetime.now)
     plant_id = db.Column(db.Integer, db.ForeignKey(
         'plants.id', ondelete='CASCADE'), nullable=False)
@@ -19,12 +19,14 @@ class ImageModel(db.Model):
     def __repr__(self):
         return f"Image(id: {self.id}, image_path: {self.image_path})"
 
-    # generate presigned_url during fetching only
     @classmethod
-    def find_by_user(cls, user_id: int):
+    def findAll_by_user(cls, user_id: int):
         return cls.query.filter_by(user_id=user_id).all()
 
-    # generate presigned_url during fetching only
+    @classmethod
+    def findAll_by_plant(cls, plant_id: int):
+        return cls.query.filter_by(plant_id=plant_id).all()
+
     @classmethod
     def find_all(cls):
         return cls.query.all()

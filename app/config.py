@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 
 
 class Config(object):
@@ -13,6 +13,7 @@ class Config(object):
     APP_DIR_PATH = os.path.dirname(os.path.abspath(__file__))
     CLIENTS_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "clients")
     TEMP_DIR_PATH = os.path.join(APP_DIR_PATH, "static", "clients", "temp")
+    ALLOWED_IMAGE_EXT = tuple("bmp gif jpg jpeg png".split())
     # JWT
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh", ]
