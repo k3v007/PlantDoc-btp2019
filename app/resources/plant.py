@@ -112,7 +112,7 @@ class PlantsImages(Resource):
 
         user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
-        upload_dt = datetime.now()
+        upload_dt = datetime.utcnow()
         dt_format = f"user{user_id}_%H:%M:%S_%d-%m-%Y"
         image.filename = upload_dt.strftime(dt_format) + ext
 
@@ -154,13 +154,30 @@ class PlantsImages(Resource):
                 upload_date=upload_dt,
             )
             db.session.add(image_data)
-            db.session.commit()
+            db.session.flush()
+
+            result_json = {
+                "disease_detected": result["Disease"],
+                "disease_id": disease.id,
+                "image_id": image_data.id
+                # "upload_date": 
+            }
+
+            # save the image to DB to get image_id, now check probability
+            if result["Probability"] < 0.85:
+                result_json["disease_detected"] = None
+                result_json["disease_id"] = None
+                image_data.disease_id = None
+                db.session.add(image_data)
+                db.session.commit()
+                current_app.logger.info()
+
         except Exception as e:     # noqa
             current_app.logger.error(e.args[0])
             delete_image(image_path)
             return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
         # if all above processes completed successfully, then return result
-        return result, 200
+        return result_json, 200
 
 
 # Get all disease of a plant

@@ -22,9 +22,9 @@ class UserModel(db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     active = db.Column(db.Boolean, nullable=False, default=True)
     member_since = db.Column(db.DateTime(), nullable=False,
-                             default=datetime.now)
+                             default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), nullable=False,
-                          default=datetime.now)
+                          default=datetime.utcnow)
     images = db.relationship('ImageModel', backref="user",
                              cascade="all, delete-orphan", lazy=True)
 
@@ -85,6 +85,6 @@ class UserModel(db.Model):
         db.session.commit()
 
     def ping(self) -> None:
-        self.last_seen = datetime.now()
+        self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
