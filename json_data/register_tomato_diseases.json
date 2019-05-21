@@ -1,44 +1,42 @@
-{
-	"diseases": [
-		{
-			"name": "Tomato_Bacterial_spot",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Early_blight",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Late_blight",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Leaf_Mold",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Septoria_leaf_spot",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Spider_mites Two-spotted_spider_mite",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Target_Spot",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_Yellow_Leaf_Curl_Virus",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_mosaic_virus",
-			"plant_name": "tomato"
-		},
-		{
-			"name": "Tomato_healthy",
-			"plant_name": "tomato"
-		}
-	]
-}
+[
+	{
+		"name": "Tomato_Bacterial_spot",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Early_blight",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Late_blight",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Leaf_Mold",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Septoria_leaf_spot",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Spider_mites Two-spotted_spider_mite",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Target_Spot",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_Yellow_Leaf_Curl_Virus",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_mosaic_virus",
+		"plant_name": "tomato"
+	},
+	{
+		"name": "Tomato_healthy",
+		"plant_name": "tomato"
+	}
+]
