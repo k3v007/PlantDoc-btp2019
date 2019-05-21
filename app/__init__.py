@@ -11,8 +11,7 @@ from flask_restful import Api       # noqa
 
 from app.models import db  # noqa
 from app.resources import oauth  # noqa
-from app.resources.disease import (Disease, DiseaseList, DiseaseListOfPlant,  # noqa
-                                   RegisterDiseases, UpdateDisease)
+from app.resources.disease import Diseases, DiseasesID     # noqa
 from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
 from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
 from app.resources.plant import (Plants, PlantsDiseases, PlantsID,  # noqa
@@ -60,11 +59,8 @@ def create_app():
     api.add_resource(PlantsImages, '/api/v1/plants/<int:plant_id>/images')
 
     # Diseases
-    api.add_resource(Disease, '/api/disease/<int:disease_id>')
-    api.add_resource(DiseaseList, '/api/diseases')
-    api.add_resource(DiseaseListOfPlant, '/api/diseases/<int:plant_id>')
-    api.add_resource(RegisterDiseases, '/api/register/diseases')
-    api.add_resource(UpdateDisease, '/api/update/disease/<int:disease_id>')
+    api.add_resource(Diseases, '/api/v1/diseases')
+    api.add_resource(DiseasesID, '/api/v1/diseases/<int:disease_id>')
 
     # Image
     api.add_resource(ImageUpload, "/api/upload/image/<int:plant_id>")

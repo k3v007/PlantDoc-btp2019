@@ -4,7 +4,9 @@ from app.models import db
 class DiseaseModel(db.Model):
     __tablename__ = "diseases"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    scientific_name = db.Column(db.String(200), default=None, nullable=True)
+    vector = db.Column(db.String(150), default=None, nullable=True)
     nutshell = db.Column(db.Text(), default=None, nullable=True)
     symptoms = db.Column(db.Text(), default=None, nullable=True)
     trigger = db.Column(db.Text(), default=None, nullable=True)
@@ -16,14 +18,14 @@ class DiseaseModel(db.Model):
     __table_args__ = (db.UniqueConstraint('name', 'plant_id'), )
 
     def __repr__(self):
-        return f"Disease(id: {self.id}, name: {self.name}, plant_id: {self.plant_id})"  # noqa
+        return f"Disease({self.name})"
 
     @classmethod
     def find_all(cls):
         return cls.query.all()
 
     @classmethod
-    def find_all_by_plant(cls, plant_id: int):
+    def findAll_by_plant(cls, plant_id: int):
         return cls.query.filter_by(plant_id=plant_id).all()
 
     @classmethod

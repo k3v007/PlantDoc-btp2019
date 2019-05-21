@@ -29,7 +29,8 @@ def after_request(response):
     user_id = get_jwt_identity()
     if user_id is not None:
         user = UserModel.find_by_id(user_id)
-        user.ping()
+        if user is not None:
+            user.ping()
 
     # Check for login
     if request.endpoint and request.endpoint[-5:] == "login":
