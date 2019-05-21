@@ -1,19 +1,19 @@
 from app.models import db
-from app.models.disease import DiseaseModel
-from app.models.image import ImageModel
+from app.models.disease import DiseaseModel  # noqa
+from app.models.image import ImageModel  # noqa
 
 
 class PlantModel(db.Model):
     __tablename__ = "plants"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    diseases = db.relationship(
-        'DiseaseModel', backref="plant_dis", cascade="all, delete-orphan", lazy=True)
-    images = db.relationship(
-        'ImageModel', backref="plant_img", cascade="all, delete-orphan", lazy=True)
+    name = db.Column(db.String(150), nullable=False, unique=True)
+    diseases = db.relationship('DiseaseModel', backref="plant_dis",
+                               cascade="all, delete-orphan", lazy=True)
+    images = db.relationship('ImageModel', backref="plant_img",
+                             cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
-        return f"Plant(id: {self.id}, name: {self.name})"
+        return f"Plant({self.name})"
 
     @classmethod
     def find_all(cls):

@@ -15,9 +15,10 @@ from app.resources.disease import (Disease, DiseaseList, DiseaseListOfPlant,  # 
                                    RegisterDiseases, UpdateDisease)
 from app.resources.google_login import GoogleAuthorize, GoogleLogin  # noqa
 from app.resources.image import ImageList, ImageListOfUser, ImageUpload  # noqa
-from app.resources.plant import Plant, PlantList, RegisterPlants  # noqa
-from app.resources.user import (TokenRefresh, User, UserList,  # noqa
-                                UserLogin, UserLogout, UserRegister)
+from app.resources.plant import (Plants, PlantsDiseases, PlantsID,  # noqa
+                                 PlantsImages)
+from app.resources.user import (Login, Logout, TokenRefresh,    # noqa
+                                Users, UsersID, UsersImages)
 from app.schemas import ma  # noqa
 
 
@@ -28,7 +29,9 @@ cors = CORS()
 
 
 def create_app():
+
     app = Flask(__name__)
+
     # app.config.from_object(config_class)
     app.config.from_object(os.environ['APP_SETTINGS'])
     cors.init_app(app)
@@ -37,26 +40,36 @@ def create_app():
     jwt.init_app(app)
     oauth.init_app(app)
 
-    api.add_resource(UserRegister, '/register')
-    api.add_resource(UserLogin, '/login')
-    api.add_resource(User, '/api/user/<int:user_id>')
-    api.add_resource(UserList, '/api/users')
-    api.add_resource(UserLogout, '/logout')
+    # Login related
+    api.add_resource(Login, '/login')
+    api.add_resource(Logout, '/logout')
     api.add_resource(TokenRefresh, "/refresh")
-    api.add_resource(Plant, '/api/plant/<string:name>')
-    api.add_resource(PlantList, '/api/plants')
-    api.add_resource(RegisterPlants, '/api/register/plants')
+    api.add_resource(GoogleLogin, "/login/google")
+    api.add_resource(GoogleAuthorize, "/login/google/authorized",
+                                      endpoint="google_authorize")
+
+    # Users
+    api.add_resource(Users, '/api/v1/users')
+    api.add_resource(UsersID, '/api/v1/users/<int:user_id>')
+    api.add_resource(UsersImages, '/api/v1/users/images')
+
+    # Plants
+    api.add_resource(Plants, '/api/v1/plants')
+    api.add_resource(PlantsID, '/api/v1/plants/<int:plant_id>')
+    api.add_resource(PlantsDiseases, '/api/v1/plants/<int:plant_id>/diseases')
+    api.add_resource(PlantsImages, '/api/v1/plants/<int:plant_id>/images')
+
+    # Diseases
     api.add_resource(Disease, '/api/disease/<int:disease_id>')
     api.add_resource(DiseaseList, '/api/diseases')
     api.add_resource(DiseaseListOfPlant, '/api/diseases/<int:plant_id>')
     api.add_resource(RegisterDiseases, '/api/register/diseases')
     api.add_resource(UpdateDisease, '/api/update/disease/<int:disease_id>')
+
+    # Image
     api.add_resource(ImageUpload, "/api/upload/image/<int:plant_id>")
     api.add_resource(ImageList, "/api/images")
     api.add_resource(ImageListOfUser, "/api/user/images")
-    api.add_resource(GoogleLogin, "/login/google")
-    api.add_resource(GoogleAuthorize, "/login/google/authorized",
-                                      endpoint="google_authorize")
 
     from app.views import APP
     app.register_blueprint(APP)
