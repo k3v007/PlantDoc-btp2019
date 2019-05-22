@@ -25,20 +25,20 @@ class Diseases(Resource):
         disease_data = disease_schema.load(request.get_json())
         plant = PlantModel.find_by_id(disease_data.plant_id)
         if plant is None:
-            return {"message": f"Plant[id={data.disease_id}] not found."}, 400    # noqa
+            return {"msg": f"Plant[id={data.disease_id}] not found."}, 400    # noqa
 
         disease = DiseaseModel.query.filter_by(name=disease_data.name,
                                                plant_id=plant.id).first()
         if disease:
             current_app.logger.debug("<disease, plant> already registered")
-            return {"message": f"Disease '{disease_data.name}' already registered with Plant[id={plant.id}]."}, 400  # noqa
+            return {"msg": f"Disease '{disease_data.name}' already registered with Plant[id={plant.id}]."}, 400  # noqa
         try:
             disease_data.save_to_db()
             current_app.logger.info(f"Registered {disease_data}")
-            return {"message": "Disease successfully registered."}, 201
+            return {"msg": "Disease successfully registered."}, 201
         except Exception as err:     # noqa
             current_app.logger.error(err)
-            return {"message": "Failed to register the disease(s)"}, 500
+            return {"msg": "Failed to register the disease(s)"}, 500
 
 
 class DiseasesID(Resource):
@@ -49,7 +49,7 @@ class DiseasesID(Resource):
         disease = DiseaseModel.find_by_id(disease_id)
         if disease:
             return disease_schema.dump(disease), 200
-        return {"message": f"Disease[id={disease_id}] not found."}, 404
+        return {"msg": f"Disease[id={disease_id}] not found."}, 404
 
     # Update disease's info
     @classmethod
@@ -70,8 +70,8 @@ class DiseasesID(Resource):
             disease.preventive_measures = _disease.preventive_measures
             disease.save_to_db()
             current_app.logger.info(f"Updated {disease}")
-            return {"message": f"Disease[id={disease_id}] updated successfully."}, 200
-        return {"message": "Disease not found."}, 404
+            return {"msg": f"Disease[id={disease_id}] updated successfully."}, 200
+        return {"msg": "Disease not found."}, 404
 
     # Delete disease
     @classmethod
@@ -80,5 +80,5 @@ class DiseasesID(Resource):
         disease = DiseaseModel.find_by_id(disease_id)
         if disease:
             disease.delete_from_db()
-            return {"message": f"Disease[id={disease_id}] deleted successfully."}, 200     # noqa
-        return {"message": f"Disease[id={disease_id}] not found."}, 404
+            return {"msg": f"Disease[id={disease_id}] deleted successfully."}, 200     # noqa
+        return {"msg": f"Disease[id={disease_id}] not found."}, 404

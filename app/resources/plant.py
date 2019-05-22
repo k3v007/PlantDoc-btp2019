@@ -111,7 +111,7 @@ class PlantsImages(Resource):
         user = UserModel.find_by_id(user_id)
         plant = PlantModel.find_by_id(plant_id)
         if plant is None:
-            return {"message": "Wrong plant id provided."}, 400
+            return {"msg": "Wrong plant id provided."}, 400
 
         user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
@@ -121,14 +121,14 @@ class PlantsImages(Resource):
 
         # Check for allowed image extensions
         if ext[1:] not in current_app.config["ALLOWED_IMAGE_EXT"]:
-            return {"messages": f"Extension {ext} not allowed."}, 400
+            return {"msg": f"Extension {ext} not allowed."}, 400
 
         # save client image on disk
         # file should be of image type only
         try:
             image_path = save_image(image, folder=user_folder)
         except:     # noqa
-            return {"message": "Not a valid image"}, 400
+            return {"msg": "Not a valid image"}, 400
 
         # predict the disease
         try:
@@ -142,12 +142,12 @@ class PlantsImages(Resource):
             if disease is None:
                 current_app.logger.error(f"Predicted disease <{result['Disease']}> not found!")    # noqa
                 delete_image(image_path)
-                return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+                return {"msg": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
 
         except Exception as e:     # noqa 
             current_app.logger.error(e.args[0])
             delete_image(image_path)
-            return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+            return {"msg": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
 
         # save image into database
         try:
@@ -175,7 +175,7 @@ class PlantsImages(Resource):
         except Exception as e:     # noqa
             current_app.logger.error(e.args[0])
             delete_image(image_path)
-            return {"message": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+            return {"msg": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
 
         # if all above processes completed successfully, then return result
         return result_json, 200
