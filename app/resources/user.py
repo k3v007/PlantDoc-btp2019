@@ -109,7 +109,19 @@ class UsersImages(Resource):
     @classmethod
     @jwt_required
     def get(cls):
+        query = request.args.get('sort')
         user_id = get_jwt_identity()
+        if query is not None:
+            if query[0] == '-':
+                return {"images": image_list_schema.dump(
+                    ImageModel.query.filter_by(user_id=user_id).order_by(
+                        ImageModel.upload_date.desc()).all()
+                )}, 200
+            else:
+                return {"images": image_list_schema.dump(
+                    ImageModel.query.filter_by(user_id=user_id).order_by(
+                        ImageModel.upload_date.asc()).all()
+                )}, 200
         return {"images": image_list_schema.dump(ImageModel.findAll_by_user(user_id))}     # noqa
 
 
