@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from app.models import db
@@ -29,6 +30,10 @@ class ImageModel(db.Model):
         return cls.query.filter_by(plant_id=plant_id).all()
 
     @classmethod
+    def find_by_id(cls, img_id: int):
+        return cls.query.get(img_id)
+
+    @classmethod
     def find_all(cls):
         return cls.query.all()
 
@@ -37,5 +42,8 @@ class ImageModel(db.Model):
         db.session.commit()
 
     def delete_from_db(self):
+        # delete from disk also
+        if os.path.exists(self.image_path):
+            os.remove(self.image_path)
         db.session.delete(self)
         db.session.commit()

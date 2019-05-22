@@ -13,6 +13,7 @@ def save_image(image_data: FileStorage, folder):
     # Resize the image before saving
     # Image size close to 640x360 or 640x480
     image = Image.open(image_data)
+    current_app.logger.info(f"Image size uploaded by user: {image.size}")
     max_size = 640, 480
     image.thumbnail(max_size, Image.ANTIALIAS)
 
