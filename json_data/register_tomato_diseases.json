@@ -1,42 +1,42 @@
 [
 	{
-		"name": "Tomato_Bacterial_spot",
-		"plant_name": "tomato"
+		"name": "bacterial_spot",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Early_blight",
-		"plant_name": "tomato"
+		"name": "early_blight",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Late_blight",
-		"plant_name": "tomato"
+		"name": "healthy",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Leaf_Mold",
-		"plant_name": "tomato"
+		"name": "late_blight",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Septoria_leaf_spot",
-		"plant_name": "tomato"
+		"name": "leaf_mold",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Spider_mites Two-spotted_spider_mite",
-		"plant_name": "tomato"
+		"name": "mosaic_virus",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Target_Spot",
-		"plant_name": "tomato"
+		"name": "septoria_leaf_spot",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_Yellow_Leaf_Curl_Virus",
-		"plant_name": "tomato"
+		"name": "target_spot",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_mosaic_virus",
-		"plant_name": "tomato"
+		"name": "two_spotted_spider_mite",
+		"plant_id": 3
 	},
 	{
-		"name": "Tomato_healthy",
-		"plant_name": "tomato"
+		"name": "yellow_leaf_curl_virus",
+		"plant_id": 3
 	}
 ]
