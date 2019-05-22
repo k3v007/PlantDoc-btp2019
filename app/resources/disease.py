@@ -68,9 +68,13 @@ class DiseasesID(Resource):
             disease.biological_control = _disease.biological_control
             disease.chemical_control = _disease.chemical_control
             disease.preventive_measures = _disease.preventive_measures
-            disease.save_to_db()
-            current_app.logger.info(f"Updated {disease}")
-            return {"msg": f"Disease[id={disease_id}] updated successfully."}, 200
+            try:
+                disease.save_to_db()
+                current_app.logger.info(f"Updated {disease}")
+                return {"msg": f"Disease[id={disease_id}] updated successfully."}, 200  # noqa
+            except Exception as err:     # noqa
+                current_app.logger.error(err)
+                return {"msg": "Failed to update the disease's info"}, 500
         return {"msg": "Disease not found."}, 404
 
     # Delete disease

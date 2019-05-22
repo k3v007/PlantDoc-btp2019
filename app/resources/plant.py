@@ -43,8 +43,8 @@ class Plants(Resource):
             current_app.logger.debug(f"Plant<{plant_data.name}> already registered.")   # noqa
             return {"msg": f"Plant[name={plant.name}] already registered."}, 400        # noqa
         try:
-            current_app.logger.info(f"Registered {plant_data}")
             plant_data.save_to_db()
+            current_app.logger.info(f"Registered {plant_data}")
             return {"msg": "Plant has been successfully registered"}, 201
         except Exception as err:
             current_app.logger.error(err)
@@ -72,7 +72,7 @@ class PlantsID(Resource):
             plant.name = data.name
             plant.save_to_db()
             current_app.logger.info(f"Updated {plant}")
-            return {"msg": "Plant's info has been successfully updated"}, 200
+            return {"msg": f"Plant[id={plant_id}] info has been successfully updated"}, 200     # noqa
         return {"msg": f"Plant[id={plant_id}] not found."}, 404
 
     # Delete plant
