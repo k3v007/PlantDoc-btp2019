@@ -13,7 +13,7 @@ class PlantModel(db.Model):
                              cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
-        return f"Plant({self.name})"
+        return f"Plant({self.id}, {self.name})"
 
     @classmethod
     def find_all(cls):

@@ -29,7 +29,7 @@ class UserModel(db.Model):
                              cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
-        return f"User({self.name}, {self.email})"
+        return f"User({self.id}, {self.name}, {self.email})"
 
     @validates('name')
     def validate_name(cls, key, name):

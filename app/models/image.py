@@ -19,7 +19,7 @@ class ImageModel(db.Model):
         'diseases.id', ondelete='CASCADE'))
 
     def __repr__(self):
-        return f"Image(id: {self.id}, image_path: {self.image_path})"
+        return f"Image({self.id}, image_path: {self.image_path})"
 
     @classmethod
     def findAll_by_user(cls, user_id: int):

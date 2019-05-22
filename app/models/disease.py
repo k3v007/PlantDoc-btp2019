@@ -18,7 +18,7 @@ class DiseaseModel(db.Model):
     __table_args__ = (db.UniqueConstraint('name', 'plant_id'), )
 
     def __repr__(self):
-        return f"Disease({self.name})"
+        return f"Disease({self.id}, {self.name})"
 
     @classmethod
     def find_all(cls):
