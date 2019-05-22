@@ -1,0 +1,32 @@
+[
+	{
+		"name": "bacterial_spot"
+	},
+	{
+		"name": "early_blight"
+	},
+	{
+		"name": "healthy"
+	},
+	{
+		"name": "late_blight"
+	},
+	{
+		"name": "leaf_mold"
+	},
+	{
+		"name": "mosaic_virus"
+	},
+	{
+		"name": "septoria_leaf_spot"
+	},
+	{
+		"name": "target_spot"	
+	},
+	{
+		"name": "two_spotted_spider_mite"
+	},
+	{
+		"name": "yellow_leaf_curl_virus"
+	}
+]

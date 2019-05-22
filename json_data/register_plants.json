@@ -1,21 +1,11 @@
 [
 	{
-		"name":	"corn"
+		"name":	"citrus"
 	},
 	{
 		"name":	"tomato"
 	},
 	{
-		"name":	"grape"
-	},
-	{
-		"name": "potato"
-	},
-	{
-		"name": "apple"
-	},
-	{
-		"name": "strawberry"
+		"name":	"corn"
 	}
 ]
-

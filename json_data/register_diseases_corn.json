@@ -1,0 +1,15 @@
+[
+	{
+		"name":	"common_rust"
+	},
+	{
+		"name":	"gray_leaf_spot"
+	},
+	{
+		"name":	"healthy"
+	},
+	{
+		"name": "northern_leaf_blight"
+	}
+]
+
