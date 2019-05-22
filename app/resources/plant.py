@@ -104,6 +104,9 @@ class PlantsImages(Resource):
     @jwt_required
     def post(cls, plant_id: int):
         image = image_schema.load(request.files)["image"]
+        img_path = None
+        if "client_img_path" in request.form:
+            img_path = request.form["client_img_path"]
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         plant = PlantModel.find_by_id(plant_id)
@@ -153,6 +156,8 @@ class PlantsImages(Resource):
                 user_id=user_id, disease_id=disease.id,
                 upload_date=upload_dt,
             )
+            if img_path is not None:
+                image_data.client_img_path = img_path
             db.session.add(image_data)
             db.session.flush()
 
