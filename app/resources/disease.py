@@ -30,7 +30,7 @@ class Diseases(Resource):
         disease = DiseaseModel.query.filter_by(name=disease_data.name,
                                                plant_id=plant.id).first()
         if disease:
-            current_app.logger.debug("<disease, plant> already registered")
+            current_app.logger.debug(f"[{disease}, {plant}] already registered")    # noqa
             return {"msg": f"Disease '{disease_data.name}' already registered with Plant[id={plant.id}]."}, 400  # noqa
         try:
             disease_data.save_to_db()
