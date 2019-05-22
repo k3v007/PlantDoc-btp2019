@@ -15,6 +15,7 @@ app.register_blueprint(api_bp)
 @app.errorhandler(ValidationError)
 def handle_marshmallow_validation(err):
     current_app.logger.error(err.messages)
+    current_app.logger.info(err.valid_data)
     return jsonify(err.messages), 400
 
 
@@ -64,4 +65,4 @@ if __name__ != "__main__":
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=8000)
