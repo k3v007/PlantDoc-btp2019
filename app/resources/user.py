@@ -11,12 +11,11 @@ from app.custom import admin_required
 from app.models.image import ImageModel
 from app.models.user import UserModel
 from app.schemas.image import ImageModelSchema
-from app.schemas.user import UserSchema, UserUpdateSchema
+from app.schemas.user import UserSchema
 
 user_schema = UserSchema()
 user_list_schema = UserSchema(many=True)
 image_list_schema = ImageModelSchema(many=True)
-user_update_schema = UserUpdateSchema()
 
 
 # For all users resource
@@ -73,12 +72,16 @@ class UsersID(Resource):
             current_app.logger.debug(f"User-id<{user_id}> not found.")
             return {"msg": f"User[id={user_id}] not found"}, 404
 
-        data = user_update_schema.load(request.get_json())
-        user.name = data["name"]
-        user.active = data["active"]
+        _user = user_schema.load(request.get_json(),
+                                 partial=("email", "password"))
+        _user.name = user.name if _user.name is None else _user.name
+        _user.active = user.active if _user.active is None else _user.active
+        user.name = _user.name
+        user.active = _user.active
         try:
             user.save_to_db()
-            return {"msg": "User's info has been successfully updated"}, 201
+            current_app.logger.info(f"Updated {user}")
+            return {"msg": f"User[id={user_id}] info has been successfully updated"}, 201   # noqa
         except Exception as err:     # noqa
             current_app.logger.error(err)
             return {"msg": "Failed to update the user's info"}, 500
