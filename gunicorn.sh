@@ -4,5 +4,4 @@ gunicorn run:app\
     --timeout 120\
     --log-level INFO\
     --access-logfile logs/gunicorn.access.log\
-    --error-logfile logs/gunicorn.error.log\
-    --reload
+    --error-logfile logs/gunicorn.error.log
