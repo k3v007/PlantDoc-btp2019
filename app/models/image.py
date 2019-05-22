@@ -38,7 +38,7 @@ class ImageModel(db.Model):
         return cls.query.all()
 
     def save_to_db(self):
-        db.session.save(self)
+        db.session.add(self)
         db.session.commit()
 
     def delete_from_db(self):
