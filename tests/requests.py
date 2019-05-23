@@ -1,3 +1,4 @@
+
 import json
 import os
 from glob import glob
@@ -10,6 +11,23 @@ domain = "http://localhost:8000{}"
 PLANTS = {}
 admin_email = 'admin@gmail.com'
 password = '1234'
+
+
+def registerAdmin():
+	r = http.request(
+		'POST',
+		domain.format('/api/v1/users'),
+		headers={"Content-Type": "application/json"},
+		body=json.dumps({
+			'name': "Administrator",
+			'email': "admin@gmail.com",
+			'admin': True,
+			'password': "1234"
+		}).encode('utf-8')
+	)
+	print(json.loads(r.data))
+
+
 
 r = http.request(
         'POST',
@@ -50,6 +68,7 @@ def registerPlants():
 
 
 r = httpRequest('GET', '/api/v1/plants')
+# print(r.data)
 plants = json.loads(r.data)["plants"]
 for plant in plants:
     PLANTS[plant["name"]] = str(plant["id"])
@@ -68,5 +87,6 @@ def registerDiseases():
                 print(json.loads(r.data), r.status)
 
 
+#registerAdmin()
 registerPlants()
 registerDiseases()
