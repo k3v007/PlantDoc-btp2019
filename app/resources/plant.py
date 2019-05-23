@@ -117,6 +117,7 @@ class PlantsImages(Resource):
             current_app.logger.info(f"Wrong plant[id={plant_id}]")
             return {"msg": "Wrong plant id provided."}, 400
 
+        current_app.logger.info(f"Image uploaded by {user}: {image.filename}")    # noqa
         user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
         upload_dt = datetime.utcnow()

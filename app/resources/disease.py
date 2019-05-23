@@ -25,7 +25,7 @@ class Diseases(Resource):
         disease_data = disease_schema.load(request.get_json())
         plant = PlantModel.find_by_id(disease_data.plant_id)
         if plant is None:
-            current_app.logger.info(f"Wrong plant[id={plant_id}]")
+            current_app.logger.info(f"Wrong plant[id={disease_data.plant_id}]")
             return {"msg": f"Plant[id={data.disease_id}] not found."}, 400    # noqa
 
         disease = DiseaseModel.query.filter_by(name=disease_data.name,
