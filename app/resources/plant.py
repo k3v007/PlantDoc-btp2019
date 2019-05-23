@@ -120,6 +120,10 @@ class PlantsImages(Resource):
         current_app.logger.info(f"Image uploaded by {user}: {image.filename}")    # noqa
         user_folder = user.user_dir
         ext = os.path.splitext(image.filename)[1]
+        if ext == '':
+            current_app.logger.info(f"No file extension found.")
+            return {"msg": "File without proper extension not allowed"}, 400
+
         upload_dt = datetime.utcnow()
         dt_format = f"user{user_id}_%H:%M:%S_%d-%m-%Y"
         image.filename = upload_dt.strftime(dt_format) + ext
