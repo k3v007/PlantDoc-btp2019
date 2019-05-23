@@ -69,6 +69,7 @@ class DiseasesID(Resource):
             disease.biological_control = disease.biological_control if _disease.biological_control is None else  _disease.biological_control        # noqa
             disease.chemical_control = disease.chemical_control if _disease.chemical_control is None else _disease.chemical_control                 # noqa
             disease.preventive_measures = disease.preventive_measures if _disease.preventive_measures is None else _disease.preventive_measures     # noqa
+            disease.disease_img = disease.disease_img if _disease.disease_img is None else _disease.disease_img                                     # noqa
             try:
                 disease.save_to_db()
                 current_app.logger.info(f"Updated {disease}")
