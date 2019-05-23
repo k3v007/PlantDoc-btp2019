@@ -18,5 +18,8 @@
 # trained_models folders
 /app/disease_prediction_models/*/
 
+# migrations folder
+/migrations
+
 # log files
 /logs/*.log
