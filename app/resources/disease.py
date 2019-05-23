@@ -57,7 +57,7 @@ class DiseasesID(Resource):
     def put(cls, disease_id: int):
         disease_json = request.get_json()
         _disease = disease_schema.load(disease_json,
-                                       partial=("name", "plant_name",))
+                                       partial=("name", "plant_id",))
         disease = DiseaseModel.query.get(disease_id)
         if disease is not None:
             disease.scientific_name = _disease.scientific_name
