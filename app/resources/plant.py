@@ -109,6 +109,8 @@ class PlantsImages(Resource):
             img_path = request.form["client_img_path"]
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
+        if user is None:
+            return {"msg": "Invalid user."}, 400
         plant = PlantModel.find_by_id(plant_id)
         if plant is None:
             return {"msg": "Wrong plant id provided."}, 400
