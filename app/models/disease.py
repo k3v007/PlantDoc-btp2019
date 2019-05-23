@@ -13,6 +13,7 @@ class DiseaseModel(db.Model):
     biological_control = db.Column(db.Text(), default=None, nullable=True)
     chemical_control = db.Column(db.Text(), default=None, nullable=True)
     preventive_measures = db.Column(db.Text(), default=None, nullable=True)
+    disease_img = db.Column(db.String(250), default=None, nullable=True)
     plant_id = db.Column(db.Integer, db.ForeignKey(
         'plants.id', ondelete='CASCADE'), nullable=False)
     __table_args__ = (db.UniqueConstraint('name', 'plant_id'), )
