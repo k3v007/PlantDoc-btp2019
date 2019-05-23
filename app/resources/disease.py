@@ -60,14 +60,14 @@ class DiseasesID(Resource):
                                        partial=("name", "plant_id",))
         disease = DiseaseModel.query.get(disease_id)
         if disease is not None:
-            disease.scientific_name = _disease.scientific_name
-            disease.vector = _disease.vector
-            disease.nutshell = _disease.nutshell
-            disease.trigger = _disease.trigger
-            disease.symptoms = _disease.symptoms
-            disease.biological_control = _disease.biological_control
-            disease.chemical_control = _disease.chemical_control
-            disease.preventive_measures = _disease.preventive_measures
+            disease.scientific_name = disease.scientific_name if _disease.scientific_name is None else _disease.scientific_name                     # noqa
+            disease.vector = disease.vector if _disease.vector is None else _disease.vector                                                         # noqa
+            disease.nutshell = disease.nutshell if _disease.nutshell is None else _disease.nutshell                                                 # noqa
+            disease.trigger = disease.trigger if _disease.trigger is None else _disease.trigger                                                     # noqa
+            disease.symptoms = disease.symptoms if _disease.symptoms is None else _disease.symptoms                                                 # noqa
+            disease.biological_control = disease.biological_control if _disease.biological_control is None else  _disease.biological_control        # noqa
+            disease.chemical_control = disease.chemical_control if _disease.chemical_control is None else _disease.chemical_control                 # noqa
+            disease.preventive_measures = disease.preventive_measures if _disease.preventive_measures is None else _disease.preventive_measures     # noqa
             try:
                 disease.save_to_db()
                 current_app.logger.info(f"Updated {disease}")
