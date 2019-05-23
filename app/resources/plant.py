@@ -110,9 +110,11 @@ class PlantsImages(Resource):
         user_id = get_jwt_identity()
         user = UserModel.find_by_id(user_id)
         if user is None:
+            current_app.logger.info(f"Wrong user[id={user_id}]")
             return {"msg": "Invalid user."}, 400
         plant = PlantModel.find_by_id(plant_id)
         if plant is None:
+            current_app.logger.info(f"Wrong plant[id={plant_id}]")
             return {"msg": "Wrong plant id provided."}, 400
 
         user_folder = user.user_dir
@@ -123,6 +125,7 @@ class PlantsImages(Resource):
 
         # Check for allowed image extensions
         if ext[1:] not in current_app.config["ALLOWED_IMAGE_EXT"]:
+            current_app.logger.info(f"Extension {ext} not allowed")
             return {"msg": f"Extension {ext} not allowed."}, 400
 
         # save client image on disk
@@ -130,6 +133,7 @@ class PlantsImages(Resource):
         try:
             image_path = save_image(image, folder=user_folder)
         except:     # noqa
+            current_app.logger.info("Not a valid image file")
             return {"msg": "Not a valid image"}, 400
 
         # predict the disease
