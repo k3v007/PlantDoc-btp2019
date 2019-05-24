@@ -181,12 +181,13 @@ class PlantsImages(Resource):
                 "disease_detected": result[0][0],
                 "disease_id": disease_id_list[0],
                 "image_id": image_data.id,
-                "disease_id_list": disease_id_list
+                "disease_id_list": None
             }
             # save the image to DB to get image_id, now check probability
             if result[0][1] < 0.85:
                 result_json["disease_detected"] = None
                 result_json["disease_id"] = None
+                result_json["disease_id_list"] = None
                 image_data.disease_id = None
                 db.session.add(image_data)
                 db.session.commit()
