@@ -7,26 +7,25 @@ from urllib3 import response
 import urllib3
 
 http = urllib3.PoolManager()
-domain = "http://localhost:8000{}"
+domain = "http://localhost:5000{}"
 PLANTS = {}
-admin_email = 'admin@gmail.com'
-password = '1234'
+admin_email = 'admin.plantdoc@gmail.com'
+password = 'admin@1234'
 
 
 def registerAdmin():
-	r = http.request(
-		'POST',
-		domain.format('/api/v1/users'),
-		headers={"Content-Type": "application/json"},
-		body=json.dumps({
-			'name': "Administrator",
-			'email': "admin@gmail.com",
-			'admin': True,
-			'password': "1234"
-		}).encode('utf-8')
-	)
-	print(json.loads(r.data))
-
+    r = http.request(
+        'POST',
+        domain.format('/api/v1/users'),
+        headers={"Content-Type": "application/json"},
+        body=json.dumps({
+            'name': "Administrator",
+            'email': "admin@gmail.com",
+            'admin': True,
+            'password': "1234"
+        }).encode('utf-8')
+    )
+    print(json.loads(r.data))
 
 
 r = http.request(
@@ -59,7 +58,7 @@ def httpRequest(method, url, body=None) -> response.HTTPResponse:
 def registerPlants():
     f_path = "json_data/register_plants.json"
     print("\nRegister Plants: ")
-    with open(f_path, 'r') as f:
+    with open(f_path, 'r', encoding='utf8') as f:
         plants = json.loads(f.read())
         for plant in plants:
             # print(plant)
@@ -77,7 +76,7 @@ for plant in plants:
 def registerDiseases():
     files = glob("json_data/register_diseases*")
     for fpath in files:
-        with open(fpath, 'r') as f:
+        with open(fpath, 'r', encoding='utf8') as f:
             plant = os.path.splitext(os.path.split(fpath)[1])[0].split('_')[2]
             print(f"\nRegister {plant.capitalize()} Diseases: ")
             diseases = json.loads(f.read())
@@ -87,6 +86,6 @@ def registerDiseases():
                 print(json.loads(r.data), r.status)
 
 
-#registerAdmin()
+# registerAdmin()
 registerPlants()
 registerDiseases()
