@@ -68,11 +68,18 @@ class PlantsID(Resource):
     @classmethod
     @admin_required
     def put(cls, plant_id: int):
-        data = plant_schema.load(request.get_json())
+        _plant = plant_schema.load(request.get_json())
         plant = PlantModel.find_by_id(plant_id)
         if plant:
-            plant.name = data.name
-            plant.save_to_db()
+            plant.name = plant.name if _plant.name is None else _plant.name
+            plant.plant_img = plant.plant_img if _plant.plant_img is None else _plant.plant_img # noqa
+            try:
+                plant.save_to_db()
+                current_app.logger.info(f"Updated {plant}")
+                return {"msg": f"Plant[id={plant_id}] updated successfully."}, 200      # noqa
+            except Exception as err:     # noqa
+                current_app.logger.error(err)
+                return {"msg": "Failed to update the plant's info"}, 500
             current_app.logger.info(f"Updated {plant}")
             return {"msg": f"Plant[id={plant_id}] info has been successfully updated"}, 200     # noqa
         return {"msg": f"Plant[id={plant_id}] not found."}, 404
