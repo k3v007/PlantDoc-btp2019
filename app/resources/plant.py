@@ -14,7 +14,7 @@ from app.models.user import UserModel
 from app.predict import predict_disease
 from app.schemas.image import ImageModelSchema, ImageSchema
 from app.schemas.plant import PlantSchema
-from app.schemas.disease import DiseaseSchema
+from app.schemas.disease import DiseaseSchema, DiseaseListSchema
 from app.utils import delete_image, save_image
 
 plant_schema = PlantSchema()
@@ -22,7 +22,9 @@ plant_list_schema = PlantSchema(many=True)
 img_schema = ImageModelSchema()
 img_list_schema = ImageModelSchema(many=True)
 image_schema = ImageSchema()
+disease_schema = DiseaseSchema()
 disease_list_schema = DiseaseSchema(many=True)
+dlist_schema = DiseaseListSchema()
 
 
 # for plants
@@ -125,7 +127,7 @@ class PlantsImages(Resource):
             return {"msg": "File without proper extension not allowed"}, 400
 
         upload_dt = datetime.utcnow()
-        dt_format = f"user{user_id}_%H:%M:%S_%d-%m-%Y"
+        dt_format = f"user{user_id}_D%Y.%m.%d_T%H.%M.%S"
         image.filename = upload_dt.strftime(dt_format) + ext
 
         # Check for allowed image extensions
@@ -147,14 +149,17 @@ class PlantsImages(Resource):
                                       'disease_prediction_models',
                                       plant.name)
             result = predict_disease(image_path, model_path)
-            disease = DiseaseModel.find_by_plant(name=result["Disease"],
-                                                 plant_id=plant.id)
-            # Check if disease name is properly registerd
-            if disease is None:
-                current_app.logger.error(f"Predicted disease <{result['Disease']}> not found!")    # noqa
-                delete_image(image_path)
-                return {"msg": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
-
+            disease_id_list = []
+            for d in result:
+                disease = DiseaseModel.find_by_plant(name=d[0],
+                                                     plant_id=plant.id)
+                # Check if disease name is properly registerd
+                if disease is None:
+                    current_app.logger.error(f"Predicted disease [name={d[0]}] not found!")    # noqa
+                    delete_image(image_path)
+                    return {"msg": "The server encountered an internal error and was unable to complete your request"}, 500     # noqa
+                disease_id_list.append(disease.id)
+        # ML processing failed
         except Exception as e:     # noqa 
             current_app.logger.error(e.args[0])
             delete_image(image_path)
@@ -164,7 +169,7 @@ class PlantsImages(Resource):
         try:
             image_data = ImageModel(
                 image_path=image_path, plant_id=plant.id,
-                user_id=user_id, disease_id=disease.id,
+                user_id=user_id, disease_id=disease_id_list[0],
                 upload_date=upload_dt,
             )
             if img_path is not None:
@@ -173,18 +178,18 @@ class PlantsImages(Resource):
             db.session.flush()
 
             result_json = {
-                "disease_detected": result["Disease"],
-                "disease_id": disease.id,
+                "disease_detected": result[0][0],
+                "disease_id": disease_id_list[0],
                 "image_id": image_data.id
             }
             # save the image to DB to get image_id, now check probability
-            if result["Probability"] < 0.85:
+            if result[0][1] < 0.85:
                 result_json["disease_detected"] = None
-                result_json["disease_id"] = None
+                result_json.pop("disease_id")
+                result_json["disease_id_list"] = disease_id_list
                 image_data.disease_id = None
                 db.session.add(image_data)
                 db.session.commit()
-
         except Exception as e:     # noqa
             current_app.logger.error(e.args[0])
             delete_image(image_path)
@@ -194,7 +199,7 @@ class PlantsImages(Resource):
         return result_json, 200
 
 
-# Get all disease of a plant
+# Get all diseases of a plant
 class PlantsDiseases(Resource):
     @classmethod
     @jwt_required
@@ -205,4 +210,21 @@ class PlantsDiseases(Resource):
         return {
             "plant": plant_schema.dump(plant),
             "diseases": disease_list_schema.dump(DiseaseModel.findAll_by_plant(plant_id))   # noqa
+        }, 200
+
+    # get diseases by some priority
+    @classmethod
+    @jwt_required
+    def post(cls, plant_id):
+        plant = PlantModel.find_by_id(plant_id)
+        if plant is None:
+            return {"msg": f"Plant[id={plant_id}] not found."}, 404
+        data = dlist_schema.load(request.get_json())
+        disease_list = []
+        for _id in data["disease_id_list"]:
+            disease = DiseaseModel.find_by_id(_id)
+            disease_list.append(disease_schema.dump(disease))
+        return {
+            "plant": plant_schema.dump(plant),
+            "diseases": disease_list
         }, 200

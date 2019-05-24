@@ -46,17 +46,19 @@ def predict_disease(img_path: str, model_path: str):
     model.add(Dense(units=len(class_dictionary), activation='sigmoid'))
     model.load_weights(TOP_MODEL_WEIGHTS)
 
-    # use bottleneck prediction on top model to get the final classification
-    disease_predicted = model.predict_classes(bottleneck_prediction)
-    probability = max(model.predict_proba(bottleneck_prediction)[0])
-    classMap = {v: k for k, v in class_dictionary.items()}
-    disease_name = classMap[disease_predicted[0]]
+    # use bottleneck prediction on top model to get all probabilites
+    probabilities = model.predict_proba(bottleneck_prediction)[0]
+    result_dict = {}
+    # probabilites of all diseases
+    for k, v in class_dictionary.items():
+        result_dict[k] = probabilities[v]
 
-    # result
-    result = {}
-    result["Disease"] = disease_name
-    result["Probability"] = probability
-    current_app.logger.info({"img_path": img_path, "result": result})
+    # sort according to the porbabilites
+    result_list = sorted(result_dict.items(), key=lambda x: x[1], reverse=True)
+
+    # result_list[0] contains predicted disease
+    current_app.logger.info({"img": os.path.basename(img_path),
+                             "result": result_list[0]})
     kb.clear_session()
 
-    return result
+    return result_list
