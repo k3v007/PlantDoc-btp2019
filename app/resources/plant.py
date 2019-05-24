@@ -68,7 +68,7 @@ class PlantsID(Resource):
     @classmethod
     @admin_required
     def put(cls, plant_id: int):
-        _plant = plant_schema.load(request.get_json())
+        _plant = plant_schema.load(request.get_json(), partial=("name", ))
         plant = PlantModel.find_by_id(plant_id)
         if plant:
             plant.name = plant.name if _plant.name is None else _plant.name
