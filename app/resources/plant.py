@@ -187,7 +187,7 @@ class PlantsImages(Resource):
             if result[0][1] < 0.85:
                 result_json["disease_detected"] = None
                 result_json["disease_id"] = None
-                result_json["disease_id_list"] = None
+                result_json["disease_id_list"] = disease_id_list
                 image_data.disease_id = None
                 db.session.add(image_data)
                 db.session.commit()
