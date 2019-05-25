@@ -59,6 +59,7 @@ def predict_disease(img_path: str, model_path: str):
     # result_list[0] contains predicted disease
     current_app.logger.info({"img": os.path.basename(img_path),
                              "result": result_list[0]})
+    current_app.logger.info({"All probabilites": result_list})
     kb.clear_session()
 
     return result_list
