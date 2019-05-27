@@ -7,7 +7,6 @@ class PlantModel(db.Model):
     __tablename__ = "plants"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False, unique=True)
-    display_name = db.Column(db.String(150), default=None, nullable=True)
     plant_img = db.Column(db.String(250), default=None, nullable=True)
     diseases = db.relationship('DiseaseModel', backref="plant_dis",
                                cascade="all, delete-orphan", lazy=True)
