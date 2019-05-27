@@ -71,8 +71,8 @@ class PlantsID(Resource):
         _plant = plant_schema.load(request.get_json(), partial=("name", ))
         plant = PlantModel.find_by_id(plant_id)
         if plant:
-            plant.name = plant.name if _plant.name is None else _plant.name
-            plant.plant_img = plant.plant_img if _plant.plant_img is None else _plant.plant_img # noqa
+            plant.display_name = plant.display_name if _plant.display_name is None else _plant.display_name     # noqa
+            plant.plant_img = plant.plant_img if _plant.plant_img is None else _plant.plant_img                 # noqa
             try:
                 plant.save_to_db()
                 current_app.logger.info(f"Updated {plant}")

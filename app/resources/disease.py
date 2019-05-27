@@ -61,6 +61,7 @@ class DiseasesID(Resource):
                                        partial=("name", "plant_id",))
         disease = DiseaseModel.query.get(disease_id)
         if disease is not None:
+            disease.display_name = disease.display_name if _disease.display_name is None else _disease.display_name                                 # noqa
             disease.scientific_name = disease.scientific_name if _disease.scientific_name is None else _disease.scientific_name                     # noqa
             disease.vector = disease.vector if _disease.vector is None else _disease.vector                                                         # noqa
             disease.nutshell = disease.nutshell if _disease.nutshell is None else _disease.nutshell                                                 # noqa
