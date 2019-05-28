@@ -24,7 +24,7 @@ class DiseaseModel(db.Model):
 
     @classmethod
     def find_all(cls):
-        return cls.query.all()
+        return cls.query.order_by(cls.id.asc()).all()
 
     @classmethod
     def findAll_by_plant(cls, plant_id: int):
