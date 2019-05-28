@@ -191,7 +191,7 @@ class PlantsImages(Resource):
                 "disease_id_list": None
             }
             # save the image to DB to get image_id, now check probability
-            if result[0][1] < 0.85:
+            if result[0][1] < 0.75:
                 result_json["disease_detected"] = None
                 result_json["disease_id"] = None
                 result_json["disease_id_list"] = disease_id_list
