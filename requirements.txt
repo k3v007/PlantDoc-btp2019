@@ -44,7 +44,7 @@ marshmallow-sqlalchemy==0.16.3
 matplotlib==3.1.0
 mccabe==0.6.1
 mock==3.0.5
-numpy==1.16.3
+numpy==1.22.0
 oauthlib==2.0.1
 parso==0.4.0
 pexpect==4.7.0
